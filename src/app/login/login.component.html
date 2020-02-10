@@ -1,0 +1,35 @@
+<div class="container">
+  <div>
+
+    <h1 class="mat-h1">Login</h1>
+
+    <div class="flex-center">
+      <form (ngSubmit)="onSubmit(loginFormGroup.value)" [formGroup]="loginFormGroup">
+        <!--  Email -->
+        <mat-form-field appearance="outline">
+          <mat-label>Email</mat-label>
+          <input [errorStateMatcher]="matcher" [formControl]="emailFormControl" matInput
+                 placeholder="example@email.domain">
+          <mat-error *ngIf="emailFormControl.hasError('email') && !emailFormControl.hasError('required')">
+            Error: legit email format required
+          </mat-error>
+        </mat-form-field>
+        <br/>
+        <!--  Password -->
+        <mat-form-field appearance="outline">
+          <mat-label>Password</mat-label>
+          <input [errorStateMatcher]="matcher" [formControl]="passwordFormControl" matInput type="password">
+          <mat-error *ngIf="passwordFormControl.hasError('password') || !passwordFormControl.hasError('required')">
+            {{getPasswordError()}}
+          </mat-error>
+        </mat-form-field>
+        <div class="flex-center">
+          <button mat-raised-button type="submit">Login</button>
+        </div>
+        <div style="margin-top: 32px">
+          <app-oauth-login></app-oauth-login>
+        </div>
+      </form>
+    </div>
+  </div>
+</div>
