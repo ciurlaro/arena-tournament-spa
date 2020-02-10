@@ -19,10 +19,6 @@ export const firebaseConfig = {
 
 export const facebookAppId = '660604807780881';
 
-export const googleAppIds = {
-  clientId: '848647809387-rsbp50dpc1ovbcl31idps85jn20fmr5t.apps.googleusercontent.com'
-};
-
 /*
  * For easier debugging in development mode, you can import the following file
  * to ignore zone related error stack frames such as `zone.run`, `zoneDelegate.invokeTask`.
