@@ -7,7 +7,11 @@
 }
 
 :host {
-  width: 100vw;
-  height: 100vh;
-  background-image: url("~assets/images/login-background.jpg");
+  //width: 100vw;
+  //height: 100vh;
+  //background-image: url("~assets/images/login-background.jpg");
+}
+
+.toolbar {
+  height: 100px;
 }

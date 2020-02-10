@@ -1,7 +1,15 @@
-<!--<mat-toolbar>-->
-<!--  <span>Arena Tournament</span>-->
-<!--  <span *ngIf="isLoggedIn" class="toolbar-spacer"></span>-->
-<!--  <mat-icon *ngIf="isLoggedIn" class="toolbar-icon" aria-hidden="false" aria-label="Example heart icon">favorite</mat-icon>-->
-<!--  <mat-icon *ngIf="isLoggedIn" class="toolbar-icon" aria-hidden="false" aria-label="Example delete icon">delete</mat-icon>-->
-<!--</mat-toolbar>-->
+<mat-toolbar class="toolbar" color="primary">
+  <span>Arena Tournament</span>
+  <span *ngIf="isLoggedIn" class="toolbar-spacer"></span>
+  <mat-form-field *ngIf="isLoggedIn" appearance="standard" class="toolbar-search" color="accent">
+    <mat-label>
+      Search tournament
+    </mat-label>
+    <!--suppress TypeScriptUnresolvedVariable, HtmlFormInputWithoutLabel -->
+    <input (input)="onSearchTournamentTextChanged($event.target.value)" matInput>
+  </mat-form-field>
+  <mat-icon *ngIf="isLoggedIn" [routerLink]="'profile'" aria-hidden="false" aria-label="Example delete icon"
+            class="toolbar-icon">person
+  </mat-icon>
+</mat-toolbar>
 <router-outlet></router-outlet>

@@ -19,15 +19,20 @@ import {MatFormFieldModule} from '@angular/material/form-field';
 import {MatInputModule} from '@angular/material/input';
 import {FormsModule, ReactiveFormsModule} from '@angular/forms';
 import {MatButtonModule} from '@angular/material/button';
-import {IsLoggedInUseCase} from './domain/usecases/login/is-logged-in-use-case';
-import {LoginWithEmailPasswordUseCase} from './domain/usecases/login/login-with-email-password-use-case';
 import {OAuthLoginComponent} from './login/oauth-login/oauth-login.component';
+import {HomeComponent} from './home/home.component';
+import {TournamentCardComponent} from './home/tournament-card/tournament-card.component';
+import {MatCardModule} from '@angular/material/card';
+import {HTTP_INTERCEPTORS, HttpClientModule} from '@angular/common/http';
+import {AuthInterceptor} from './http/auth.interceptor';
 
 @NgModule({
   declarations: [
     AppComponent,
     LoginComponent,
-    OAuthLoginComponent
+    OAuthLoginComponent,
+    HomeComponent,
+    TournamentCardComponent
   ],
   imports: [
     BrowserModule,
@@ -40,15 +45,17 @@ import {OAuthLoginComponent} from './login/oauth-login/oauth-login.component';
     FormsModule,
     MatInputModule,
     ReactiveFormsModule,
-    MatButtonModule
+    MatButtonModule,
+    MatCardModule,
+    HttpClientModule
   ],
   providers: [
-    IsLoggedInUseCase,
-    LoginWithEmailPasswordUseCase,
     {provide: ArenaTournamentRepository, useClass: ArenaTournamentRepositoryImplementation},
     {provide: FirebaseAuthDatasource, useClass: FirebaseAuthDatasourceImplementation},
-    {provide: FirebaseStorageDatasource, useClass: FirebaseStorageDatasourceImplementation}
+    {provide: FirebaseStorageDatasource, useClass: FirebaseStorageDatasourceImplementation},
+    {provide: HTTP_INTERCEPTORS, useClass: AuthInterceptor, multi: true}
   ],
   bootstrap: [AppComponent]
 })
-export class AppModule { }
+export class AppModule {
+}
