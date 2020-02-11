@@ -1,6 +1,9 @@
-export interface GameEntity {
-  readonly name: string;
-  readonly availableModes: string[];
-  readonly image: string;
-  readonly icon: string;
+export class GameEntity {
+
+  constructor(
+    public readonly name: string,
+    public readonly availableModes: string[],
+    public readonly image: string,
+    public readonly icon: string
+  ) {}
 }

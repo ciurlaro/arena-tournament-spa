@@ -1,3 +1,7 @@
-export interface ModeEntity {
-  readonly modeName: string;
+export class ModeEntity {
+
+  constructor(
+    public readonly modeName: string
+  ) {}
+
 }

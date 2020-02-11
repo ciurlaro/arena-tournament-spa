@@ -1,12 +1,15 @@
 import {UserEntity} from './user-entity';
 import {GameEntity} from './game-entity';
 
-export interface TournamentEntity {
-  readonly id: number;
-  readonly playersNumber: number;
-  readonly title: string;
-  readonly description: string;
-  readonly mode: string;
-  readonly admin: UserEntity;
-  readonly game: GameEntity;
+export class TournamentEntity {
+
+  constructor(
+    public readonly id: number,
+    public readonly playersNumber: number,
+    public readonly title: string,
+    public readonly description: string,
+    public readonly mode: string,
+    public readonly admin: UserEntity,
+    public readonly game: GameEntity
+  ) {}
 }

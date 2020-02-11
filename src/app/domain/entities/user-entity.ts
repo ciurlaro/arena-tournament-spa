@@ -1,8 +1,11 @@
-export interface UserEntity {
-  readonly id: string;
-  readonly email: string;
-  readonly nickname: string;
-  readonly isSubscriber: boolean;
-  readonly image?: string;
+export class UserEntity {
+
+  constructor(
+    public readonly id: string,
+    public readonly email: string,
+    public readonly nickname: string,
+    public readonly isSubscriber: boolean,
+    public readonly image?: string
+  ) {}
 }
 
