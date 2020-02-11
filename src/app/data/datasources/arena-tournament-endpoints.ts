@@ -27,7 +27,6 @@ export abstract class ArenaTournamentEndpoints {
 
   abstract gamesByModeUrl(mode: string, page: number): [string, HttpParams];
 
-
   abstract allTournamentsUrl(page: number): [string, HttpParams];
 
   abstract tournamentByIdUrl(id: number): [string, HttpParams];
