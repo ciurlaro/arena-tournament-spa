@@ -16,7 +16,11 @@ import {MultipleRegistrationsJSON} from '../../data/rawresponses/multiple/multip
 import {UserJSON} from '../../data/rawresponses/single/user-json';
 import {HttpClient} from '@angular/common/http';
 import {Observable} from 'rxjs';
+import {Injectable} from '@angular/core';
 
+@Injectable({
+  providedIn: 'root'
+})
 export class ArenaTournamentDatasourceImplementation extends ArenaTournamentDatasource {
 
   constructor(

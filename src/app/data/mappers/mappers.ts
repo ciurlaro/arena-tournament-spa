@@ -1,0 +1,111 @@
+import {MultipleGamesJSON} from '../rawresponses/multiple/multiple-games-json';
+import {GameJSON} from '../rawresponses/single/game-json';
+import {GameEntity} from '../../domain/entities/game-entity';
+import {ModeEntity} from '../../domain/entities/mode-entity';
+import {ModeJSON} from '../rawresponses/single/mode-json';
+import {TournamentJSON} from '../rawresponses/single/tournament-json';
+import {UserJSON} from '../rawresponses/single/user-json';
+import {TournamentEntity} from '../../domain/entities/tournament-entity';
+import {UserEntity} from '../../domain/entities/user-entity';
+import {RegistrationEntity} from '../../domain/entities/registration-entity';
+import {RegistrationJSON} from '../rawresponses/single/registration-json';
+
+/** Interfaces */
+
+interface SingleFromRemoteMapper<SingleRemote, Entity> {
+  fromRemoteSingle(remote: SingleRemote): Entity;
+}
+
+interface MultipleFromRemoteMapper<MultipleRemote, SingleRemote, Entity> extends SingleFromRemoteMapper<SingleRemote, Entity> {
+  fromRemoteMultiple(remote: MultipleRemote): Entity[];
+}
+
+interface SingleToRemoteMapper<Remote, Entity> {
+  toRemoteSingle(entity: Entity): Remote;
+}
+
+interface MultipleToRemoteMapper<MultipleRemote, SingleRemote, Entity> extends SingleToRemoteMapper<SingleRemote, Entity> {
+  toRemoteMultiple(remote: MultipleRemote): Entity[];
+}
+
+
+/** Implementations */
+
+export class GameMapper implements MultipleFromRemoteMapper<MultipleGamesJSON, GameJSON, GameEntity> {
+  fromRemoteSingle(remote: GameJSON): GameEntity {
+    return new GameEntity(remote.gameName, remote.availableModes, remote.image, remote.icon);
+  }
+
+  fromRemoteMultiple(remote: MultipleGamesJSON): GameEntity[] {
+    return remote._embedded.gameEntities.map((gameJson) => this.fromRemoteSingle(gameJson));
+  }
+}
+
+export class ModeMapper implements SingleFromRemoteMapper<ModeJSON, ModeEntity> {
+  fromRemoteSingle(remote: ModeJSON): ModeEntity {
+    return new ModeEntity(remote.modeName);
+  }
+}
+
+
+export class UserMapper implements SingleFromRemoteMapper<UserJSON, UserEntity> {
+
+  fromRemoteSingle(remote: UserJSON): UserEntity {
+    return new UserEntity(remote.id, remote.email, remote.nickname, remote.subscriber, remote.image);
+  }
+
+}
+
+
+export class TournamentMapper implements SingleFromRemoteMapper<[TournamentJSON, GameJSON, UserJSON], TournamentEntity> {
+
+  constructor(
+    private readonly userMapper: UserMapper,
+    private readonly gameMapper: GameMapper
+  ) {
+  }
+
+  fromRemoteSingle(remote: [TournamentJSON, GameJSON, UserJSON]): TournamentEntity {
+    return new TournamentEntity(
+      remote[0].id,
+      remote[0].playersNumber,
+      remote[0].title,
+      remote[0].tournamentDescription,
+      remote[0].tournamentMode,
+      this.userMapper.fromRemoteSingle(remote[2]),
+      this.gameMapper.fromRemoteSingle(remote[1])
+    );
+  }
+}
+
+
+export class ModeLinkMapper implements SingleToRemoteMapper<ModeJSON, ModeEntity> {
+
+  toRemoteSingle(entity: ModeEntity): ModeJSON {
+    return {modeName: entity.modeName};
+  }
+}
+
+
+// tslint:disable-next-line:max-line-length
+export class RegistrationMapper implements SingleFromRemoteMapper<[RegistrationJSON, TournamentJSON, GameJSON, UserJSON], RegistrationEntity> {
+
+  constructor(
+    private readonly tournamentMapper: TournamentMapper,
+    private readonly userMapper: UserMapper
+  ) {
+  }
+
+  fromRemoteSingle(remote: [RegistrationJSON, TournamentJSON, GameJSON, UserJSON]): RegistrationEntity {
+    return new RegistrationEntity(
+      this.userMapper.fromRemoteSingle(remote[3]),
+      this.tournamentMapper.fromRemoteSingle([remote[1], remote[2], remote[3]]),
+      remote[0].outcome
+    );
+  }
+
+
+}
+
+
+

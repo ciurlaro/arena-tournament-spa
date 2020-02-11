@@ -8,7 +8,7 @@ import {LoginComponent} from './login/login.component';
 import {MatToolbarModule} from '@angular/material/toolbar';
 import {MatIconModule} from '@angular/material/icon';
 import {ArenaTournamentRepositoryImplementation} from './data/repositories/arena-tournament-repository-implementation';
-import {ArenaTournamentRepository} from './domain/repositories/is-logged-in-use-case';
+
 import {FirebaseAuthDatasource} from './data/datasources/firebase-auth-datasource';
 import {FirebaseAuthDatasourceImplementation} from './core-impl/datasources/firebase-auth-datasource-implementation';
 import {FirebaseStorageDatasource} from './data/datasources/firebase-storage-datasource';
@@ -25,6 +25,11 @@ import {TournamentCardComponent} from './home/tournament-card/tournament-card.co
 import {MatCardModule} from '@angular/material/card';
 import {HTTP_INTERCEPTORS, HttpClientModule} from '@angular/common/http';
 import {AuthInterceptor} from './http/auth.interceptor';
+import {ArenaTournamentDatasource} from './data/datasources/arena-tournament-datasource';
+import {ArenaTournamentDatasourceImplementation} from './core-impl/datasources/arena-tournament-datasource-implementation';
+import {ArenaTournamentEndpoints} from './data/datasources/arena-tournament-endpoints';
+import {ArenaTournamentEndpointsImplementation} from './core-impl/datasources/arena-tournament-endpoints-implementation';
+import {ArenaTournamentRepository} from './domain/repositories/arena-tournament-repository';
 
 @NgModule({
   declarations: [
@@ -53,6 +58,8 @@ import {AuthInterceptor} from './http/auth.interceptor';
     {provide: ArenaTournamentRepository, useClass: ArenaTournamentRepositoryImplementation},
     {provide: FirebaseAuthDatasource, useClass: FirebaseAuthDatasourceImplementation},
     {provide: FirebaseStorageDatasource, useClass: FirebaseStorageDatasourceImplementation},
+    {provide: ArenaTournamentDatasource, useClass: ArenaTournamentDatasourceImplementation},
+    {provide: ArenaTournamentEndpoints, useClass: ArenaTournamentEndpointsImplementation},
     {provide: HTTP_INTERCEPTORS, useClass: AuthInterceptor, multi: true}
   ],
   bootstrap: [AppComponent]

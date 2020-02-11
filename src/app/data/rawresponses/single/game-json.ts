@@ -1,4 +1,4 @@
-import {LinksJSON} from "../links-json";
+import {LinksJSON} from '../links-json';
 
 export interface GameJSON {
     readonly gameName: string,
