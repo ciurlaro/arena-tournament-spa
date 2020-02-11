@@ -7,10 +7,10 @@ import {MultipleRegistrationsJSON} from "../../data/rawresponses/multiple/multip
 import {UserJSON} from "../../data/rawresponses/single/user-json";
 import {AccountStatusJSON} from "../../data/rawresponses/single/account-status-json";
 import {MultipleGamesJSON} from "../../data/rawresponses/multiple/multiple-games-json";
-import {CreateGameModeJSON} from "../../data/rawresponses/creationresponse/create-game-mode-json";
-import {CreateGameJSON} from "../../data/rawresponses/creationresponse/create-game-json";
-import {CreateRegistrationJSON} from "../../data/rawresponses/creationresponse/create-registration-json";
-import {CreateTournamentJSON} from "../../data/rawresponses/creationresponse/create-tournament-json";
+import {CreateGameModeJSON} from "../../data/rawresponses/creation/create-game-mode-json";
+import {CreateGameJSON} from "../../data/rawresponses/creation/create-game-json";
+import {CreateRegistrationJSON} from "../../data/rawresponses/creation/create-registration-json";
+import {CreateTournamentJSON} from "../../data/rawresponses/creation/create-tournament-json";
 import {SubscriptionStatusJSON} from "../../data/rawresponses/single/subscription-status-json";
 
 abstract class ArenaTournamentDatasource {
