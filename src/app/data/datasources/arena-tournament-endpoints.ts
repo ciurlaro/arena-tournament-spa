@@ -4,60 +4,65 @@ export abstract class ArenaTournamentEndpoints {
 
   /** Post endpoints  */
 
-  abstract createGameModeUrl(): [string, HttpParams];
+  abstract createGameModeUrl(): Url;
 
-  abstract createGameUrl(): [string, HttpParams];
+  abstract createGameUrl(): Url;
 
-  abstract createRegistrationUrl(): [string, HttpParams];
+  abstract createRegistrationUrl(): Url;
 
-  abstract createTournamentUrl(): [string, HttpParams];
+  abstract createTournamentUrl(): Url;
 
-  abstract createUserUrl(): [string, HttpParams];
+  abstract createUserUrl(): Url;
 
 
   /** Get endpoints  */
 
-  abstract allGamesUrl(page: number): [string, HttpParams];
+  abstract allGamesUrl(page: number): Url;
 
-  abstract gameByNameUrl(name: string): [string, HttpParams];
+  abstract gameByNameUrl(name: string): Url;
 
-  abstract searchGamesByNameUrl(query: string, page: number): [string, HttpParams];
+  abstract searchGamesByNameUrl(query: string, page: number): Url;
 
-  abstract gamesContainingNameUrl(gameName: string, page: number): [string, HttpParams];
+  abstract gamesContainingNameUrl(gameName: string, page: number): Url;
 
-  abstract gamesByModeUrl(mode: string, page: number): [string, HttpParams];
+  abstract gamesByModeUrl(mode: string, page: number): Url;
 
-  abstract allTournamentsUrl(page: number): [string, HttpParams];
+  abstract allTournamentsUrl(page: number): Url;
 
-  abstract tournamentByIdUrl(id: number): [string, HttpParams];
+  abstract tournamentByIdUrl(id: number): Url;
 
-  abstract tournamentsByGameName(gameName: string, page: number): [string, HttpParams];
+  abstract tournamentsByGameName(gameName: string, page: number): Url;
 
-  abstract tournamentsByModeUrl(mode: string, page: number): [string, HttpParams];
+  abstract tournamentsByModeUrl(mode: string, page: number): Url;
 
-  abstract tournamentsByAdmin(userId: string, page: number): [string, HttpParams];
+  abstract tournamentsByAdmin(userId: string, page: number): Url;
 
-  abstract searchTournamentsByNameUrl(query: string, page: number): [string, HttpParams];
+  abstract searchTournamentsByNameUrl(query: string, page: number): Url;
 
-  abstract getShowCaseTournaments(page: number): [string, HttpParams];
+  abstract getShowCaseTournaments(page: number): Url;
 
-  abstract getTournamentsContainingTitle(title: string, page: number): [string, HttpParams];
+  abstract getTournamentsContainingTitle(title: string, page: number): Url;
 
-  abstract allRegistrationsUrl(page: number): [string, HttpParams];
+  abstract allRegistrationsUrl(page: number): Url;
 
-  abstract registrationByIdUrl(id: number): [string, HttpParams];
+  abstract registrationByIdUrl(id: number): Url;
 
-  abstract registrationsByUserUrl(userId: string, page: number): [string, HttpParams];
+  abstract registrationsByUserUrl(userId: string, page: number): Url;
 
-  abstract registrationsByTournamentUrl(tournamentId: number, page: number): [string, HttpParams];
+  abstract registrationsByTournamentUrl(tournamentId: number, page: number): Url;
 
-  abstract userByIdUrl(userId: string): [string, HttpParams];
+  abstract userByIdUrl(userId: string): Url;
 
-  abstract isAccountVerifiedUrl(): [string, HttpParams];
+  abstract isAccountVerifiedUrl(): Url;
 
-  abstract isAccountSubscribedUrl(): [string, HttpParams];
+  abstract isAccountSubscribedUrl(): Url;
 
-  abstract searchTournaments(title: string, page: number, gameId?: string): [string, HttpParams];
+  abstract searchTournaments(title: string, page: number, gameId?: string): Url;
 
 
+}
+
+export interface Url {
+  path: string;
+  params?: HttpParams;
 }

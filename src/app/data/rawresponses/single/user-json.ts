@@ -3,5 +3,5 @@ export interface UserJSON {
   readonly email: string;
   readonly nickname: string;
   readonly image: string;
-  readonly subscriber: boolean
+  readonly subscriber: boolean;
 }

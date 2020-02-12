@@ -1,6 +1,7 @@
 import {Observable} from 'rxjs';
 import {AuthProviders} from '../../domain/entities/auth-providers';
 import {AuthUserEntity} from '../entities/auth-user-entity';
+import {Claims} from '../rawresponses/claims';
 
 export abstract class FirebaseAuthDatasource {
   abstract updateUserEmail(email: string): Observable<boolean>;
@@ -41,7 +42,7 @@ export abstract class FirebaseAuthDatasource {
 
   abstract getCurrentAuthUser(): Observable<AuthUserEntity | null>;
 
-  abstract getCurrentUserClaims(): Observable<{ [key: string]: any; }>;
+  abstract getCurrentUserClaims(): Observable<Claims>;
 
   abstract isCurrentUserEmailVerified(): Observable<boolean>;
 }

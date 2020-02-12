@@ -9,6 +9,10 @@ import {TournamentEntity} from '../../domain/entities/tournament-entity';
 import {UserEntity} from '../../domain/entities/user-entity';
 import {RegistrationEntity} from '../../domain/entities/registration-entity';
 import {RegistrationJSON} from '../rawresponses/single/registration-json';
+import {AuthUserEntity} from '../entities/auth-user-entity';
+import {Claims} from '../rawresponses/claims';
+import {Url} from '../datasources/arena-tournament-endpoints';
+import {Inject} from '@angular/core';
 
 /** Interfaces */
 
@@ -79,14 +83,6 @@ export class TournamentMapper implements SingleFromRemoteMapper<[TournamentJSON,
 }
 
 
-export class ModeLinkMapper implements SingleToRemoteMapper<ModeJSON, ModeEntity> {
-
-  toRemoteSingle(entity: ModeEntity): ModeJSON {
-    return {modeName: entity.modeName};
-  }
-}
-
-
 // tslint:disable-next-line:max-line-length
 export class RegistrationMapper implements SingleFromRemoteMapper<[RegistrationJSON, TournamentJSON, GameJSON, UserJSON], RegistrationEntity> {
 
@@ -103,9 +99,74 @@ export class RegistrationMapper implements SingleFromRemoteMapper<[RegistrationJ
       remote[0].outcome
     );
   }
+}
 
+
+export class CurrentUserMapper implements SingleFromRemoteMapper<[AuthUserEntity, Claims, string?], UserEntity> {
+
+  fromRemoteSingle(remote: [AuthUserEntity, Claims, string?]): UserEntity {
+    return new UserEntity(
+      remote[0].id,
+      remote[0].email,
+      remote[0].nickname,
+      remote[1].isSubscriber,
+      remote[2]
+    );
+  }
+}
+
+
+export abstract class AbstractLinkMapper<T> implements SingleToRemoteMapper<Url, T> {
+  protected constructor(
+    @Inject('protocol') protected protocol: string,
+    @Inject('host') protected host: string,
+    @Inject('port') protected port: number
+  ) {
+  }
+
+  abstract toRemoteSingle(entity: T): Url;
 
 }
+
+
+export class UserLinkMapper extends AbstractLinkMapper<UserEntity> {
+
+  toRemoteSingle(entity: UserEntity): Url {
+    return {
+      path: `${this.protocol}://${this.host}${this.port !== 80 ? `:${this.port}` : ''}/user/${entity.id}`
+    };
+  }
+}
+
+
+export class GameLinkMapper extends AbstractLinkMapper<GameEntity> {
+
+  toRemoteSingle(entity: GameEntity): Url {
+    return {
+      path: `${this.protocol}://${this.host}${this.port !== 80 ? `:${this.port}` : ''}/game/${entity.name}`
+    };
+  }
+}
+
+
+export class TournamentLinkMapper extends AbstractLinkMapper<TournamentEntity> {
+
+  toRemoteSingle(entity: TournamentEntity): Url {
+    return {
+      path: `${this.protocol}://${this.host}${this.port !== 80 ? `:${this.port}` : ''}/tournament/${entity.id}`
+    };
+  }
+}
+
+
+export class ModeLinkMapper implements SingleFromRemoteMapper<ModeJSON, ModeEntity> {
+
+  fromRemoteSingle(remote: ModeJSON): ModeEntity {
+    return new ModeEntity(remote.modeName);
+  }
+
+}
+
 
 
 

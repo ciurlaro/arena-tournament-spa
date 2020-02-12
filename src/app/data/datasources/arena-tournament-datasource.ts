@@ -16,15 +16,15 @@ import {Observable} from 'rxjs';
 
 export abstract class ArenaTournamentDatasource {
 
-  abstract createGameMode(gameModeJSON: CreateGameModeJSON): Observable<ModeJSON>;
+  abstract createGameMode(createGameModeJSON: CreateGameModeJSON): Observable<ModeJSON>;
 
-  abstract createGame(gameJSON: CreateGameJSON): Observable<GameJSON>;
+  abstract createGame(createGameJSON: CreateGameJSON): Observable<GameJSON>;
 
-  abstract createRegistration(registrationJSON: CreateRegistrationJSON): Observable<RegistrationJSON>;
+  abstract createRegistration(createRegistrationJSON: CreateRegistrationJSON): Observable<RegistrationJSON>;
 
-  abstract createTournament(tournamentJSON: CreateTournamentJSON): Observable<TournamentJSON>;
+  abstract createTournament(createTournamentJSON: CreateTournamentJSON): Observable<TournamentJSON>;
 
-  abstract getAllGames(page: number): Observable<AccountStatusJSON>;
+  abstract getAllGames(page: number): Observable<MultipleGamesJSON>;
 
   abstract getGameByName(gameName: string): Observable<GameJSON>;
 

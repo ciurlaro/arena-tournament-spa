@@ -1,8 +1,8 @@
-import {LinksJSON} from "../links-json";
+import {LinksJSON} from '../links-json';
 
 export interface RegistrationJSON {
-     readonly id: number;
-  // readonly userId: string;
-     readonly _links: LinksJSON;
-     readonly outcome?
+  readonly id: number;
+  // readonly user: string;
+  readonly _links: LinksJSON;
+  readonly outcome?: string;
 }

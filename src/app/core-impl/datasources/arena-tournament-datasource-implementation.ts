@@ -31,43 +31,43 @@ export class ArenaTournamentDatasourceImplementation extends ArenaTournamentData
   }
 
   createGame(gameJSON: CreateGameJSON): Observable<GameJSON> {
-    const [url, params] = this.endpoints.createGameUrl();
-    return this.httpClient.post<GameJSON>(url, {params});
+    const url = this.endpoints.createGameUrl();
+    return this.httpClient.post<GameJSON>(url.path, gameJSON);
   }
 
   createGameMode(gameModeJSON: CreateGameModeJSON): Observable<ModeJSON> {
-    const [url, params] = this.endpoints.createGameModeUrl();
-    return this.httpClient.post<ModeJSON>(url, {params});
+    const url = this.endpoints.createGameModeUrl();
+    return this.httpClient.post<ModeJSON>(url.path, gameModeJSON);
   }
 
   createRegistration(registrationJSON: CreateRegistrationJSON): Observable<RegistrationJSON> {
-    const [url, params] = this.endpoints.createRegistrationUrl();
-    return this.httpClient.post<RegistrationJSON>(url, registrationJSON, {params});
+    const url = this.endpoints.createRegistrationUrl();
+    return this.httpClient.post<RegistrationJSON>(url.path, registrationJSON);
   }
 
   createTournament(tournamentJSON: CreateTournamentJSON): Observable<TournamentJSON> {
-    const [url, params] = this.endpoints.createTournamentUrl();
-    return this.httpClient.post<TournamentJSON>(url, tournamentJSON, {params});
+    const url = this.endpoints.createTournamentUrl();
+    return this.httpClient.post<TournamentJSON>(url.path, tournamentJSON);
   }
 
   getAccountSubscription(): Observable<SubscriptionStatusJSON> {
-    const [url, params] = this.endpoints.isAccountSubscribedUrl();
-    return this.httpClient.get<SubscriptionStatusJSON>(url, {params});
+    const url = this.endpoints.isAccountSubscribedUrl();
+    return this.httpClient.get<SubscriptionStatusJSON>(url.path);
   }
 
   getAccountVerificationStatus(): Observable<AccountStatusJSON> {
-    const [url, params] = this.endpoints.isAccountVerifiedUrl();
-    return this.httpClient.get<AccountStatusJSON>(url, {params});
+    const url = this.endpoints.isAccountVerifiedUrl();
+    return this.httpClient.get<AccountStatusJSON>(url.path);
   }
 
-  getAllGames(page: number): Observable<AccountStatusJSON> {
-    const [url, params] = this.endpoints.allGamesUrl(page);
-    return this.httpClient.get<AccountStatusJSON>(url, {params});
+  getAllGames(page: number): Observable<MultipleGamesJSON> {
+    const url = this.endpoints.allGamesUrl(page);
+    return this.httpClient.get<MultipleGamesJSON>(url.path, {params: url.params});
   }
 
   getAllTournaments(page: number): Observable<MultipleTournamentsJSON> {
-    const [url, params] = this.endpoints.allTournamentsUrl(page);
-    return this.httpClient.get<MultipleTournamentsJSON>(url, {params});
+    const url = this.endpoints.allTournamentsUrl(page);
+    return this.httpClient.get<MultipleTournamentsJSON>(url.path, {params: url.params});
   }
 
   getGameByLink(link: string): Observable<GameJSON> {
@@ -75,23 +75,23 @@ export class ArenaTournamentDatasourceImplementation extends ArenaTournamentData
   }
 
   getGameByName(gameName: string): Observable<GameJSON> {
-    const [url, params] = this.endpoints.gameByNameUrl(gameName);
-    return this.httpClient.get<GameJSON>(url, {params});
+    const url = this.endpoints.gameByNameUrl(gameName);
+    return this.httpClient.get<GameJSON>(url.path, {params: url.params});
   }
 
   getGamesByMode(mode: string, page: number): Observable<MultipleGamesJSON> {
-    const [url, params] = this.endpoints.gamesByModeUrl(mode, page);
-    return this.httpClient.get<MultipleGamesJSON>(url, {params});
+    const url = this.endpoints.gamesByModeUrl(mode, page);
+    return this.httpClient.get<MultipleGamesJSON>(url.path, {params: url.params});
   }
 
   getGamesContainingName(gameName: string, page: number): Observable<MultipleGamesJSON> {
-    const [url, params] = this.endpoints.gamesContainingNameUrl(gameName, page);
-    return this.httpClient.get<MultipleGamesJSON>(url, {params});
+    const url = this.endpoints.gamesContainingNameUrl(gameName, page);
+    return this.httpClient.get<MultipleGamesJSON>(url.path, {params: url.params});
   }
 
   getRegistrationById(id: number): Observable<RegistrationJSON> {
-    const [url, params] = this.endpoints.registrationByIdUrl(id);
-    return this.httpClient.get<RegistrationJSON>(url, {params});
+    const url = this.endpoints.registrationByIdUrl(id);
+    return this.httpClient.get<RegistrationJSON>(url.path, {params: url.params});
   }
 
   getRegistrationByLink(link: string): Observable<RegistrationJSON> {
@@ -99,23 +99,23 @@ export class ArenaTournamentDatasourceImplementation extends ArenaTournamentData
   }
 
   getRegistrationsByTournament(tournamentId: number, page: number): Observable<MultipleRegistrationsJSON> {
-    const [url, params] = this.endpoints.registrationsByTournamentUrl(tournamentId, page);
-    return this.httpClient.get<MultipleRegistrationsJSON>(url, {params});
+    const url = this.endpoints.registrationsByTournamentUrl(tournamentId, page);
+    return this.httpClient.get<MultipleRegistrationsJSON>(url.path, {params: url.params});
   }
 
   getRegistrationsByUser(userId: string, page: number): Observable<MultipleRegistrationsJSON> {
-    const [url, params] = this.endpoints.registrationsByUserUrl(userId, page);
-    return this.httpClient.get<MultipleRegistrationsJSON>(url, {params});
+    const url = this.endpoints.registrationsByUserUrl(userId, page);
+    return this.httpClient.get<MultipleRegistrationsJSON>(url.path, {params: url.params});
   }
 
   getShowCaseTournaments(page: number): Observable<MultipleRegistrationsJSON> {
-    const [url, params] = this.endpoints.getShowCaseTournaments(page);
-    return this.httpClient.get<MultipleRegistrationsJSON>(url, {params});
+    const url = this.endpoints.getShowCaseTournaments(page);
+    return this.httpClient.get<MultipleRegistrationsJSON>(url.path, {params: url.params});
   }
 
   getTournamentById(id: number): Observable<TournamentJSON> {
-    const [url, params] = this.endpoints.tournamentByIdUrl(id);
-    return this.httpClient.get<TournamentJSON>(url, {params});
+    const url = this.endpoints.tournamentByIdUrl(id);
+    return this.httpClient.get<TournamentJSON>(url.path, {params: url.params});
   }
 
   getTournamentByLink(link: string): Observable<TournamentJSON> {
@@ -123,28 +123,28 @@ export class ArenaTournamentDatasourceImplementation extends ArenaTournamentData
   }
 
   getTournamentsByGameName(gameName: string, page: number): Observable<MultipleTournamentsJSON> {
-    const [url, params] = this.endpoints.tournamentsByGameName(gameName, page);
-    return this.httpClient.get<MultipleTournamentsJSON>(url, {params});
+    const url = this.endpoints.tournamentsByGameName(gameName, page);
+    return this.httpClient.get<MultipleTournamentsJSON>(url.path, {params: url.params});
   }
 
   getTournamentsByMode(mode: string, page: number): Observable<MultipleTournamentsJSON> {
-    const [url, params] = this.endpoints.tournamentsByModeUrl(mode, page);
-    return this.httpClient.get<MultipleTournamentsJSON>(url, {params});
+    const url = this.endpoints.tournamentsByModeUrl(mode, page);
+    return this.httpClient.get<MultipleTournamentsJSON>(url.path, {params: url.params});
   }
 
   getTournamentsByUser(userId: string, page: number): Observable<MultipleTournamentsJSON> {
-    const [url, params] = this.endpoints.tournamentsByAdmin(userId, page);
-    return this.httpClient.get<MultipleTournamentsJSON>(url, {params});
+    const url = this.endpoints.tournamentsByAdmin(userId, page);
+    return this.httpClient.get<MultipleTournamentsJSON>(url.path, {params: url.params});
   }
 
   getTournamentsContainingTitle(title: string, page: number): Observable<MultipleTournamentsJSON> {
-    const [url, params] = this.endpoints.getTournamentsContainingTitle(title, page);
-    return this.httpClient.get<MultipleTournamentsJSON>(url, {params});
+    const url = this.endpoints.getTournamentsContainingTitle(title, page);
+    return this.httpClient.get<MultipleTournamentsJSON>(url.path, {params: url.params});
   }
 
   getUserById(id: string): Observable<UserJSON> {
-    const [url, params] = this.endpoints.userByIdUrl(id);
-    return this.httpClient.get<UserJSON>(url, {params});
+    const url = this.endpoints.userByIdUrl(id);
+    return this.httpClient.get<UserJSON>(url.path, {params: url.params});
   }
 
   getUserByLink(link: string): Observable<UserJSON> {
@@ -152,18 +152,18 @@ export class ArenaTournamentDatasourceImplementation extends ArenaTournamentData
   }
 
   searchGamesByName(query: string, page: number): Observable<MultipleGamesJSON> {
-    const [url, params] = this.endpoints.searchGamesByNameUrl(query, page);
-    return this.httpClient.get<MultipleGamesJSON>(url, {params});
+    const url = this.endpoints.searchGamesByNameUrl(query, page);
+    return this.httpClient.get<MultipleGamesJSON>(url.path, {params: url.params});
   }
 
   searchTournaments(title: string, page: number, gameId?: string): Observable<MultipleTournamentsJSON> {
-    const [url, params] = this.endpoints.searchTournaments(title, page);
-    return this.httpClient.get<MultipleTournamentsJSON>(url, {params});
+    const url = this.endpoints.searchTournaments(title, page);
+    return this.httpClient.get<MultipleTournamentsJSON>(url.path, {params: url.params});
   }
 
   searchTournamentsByName(name: string, page: number): Observable<MultipleTournamentsJSON> {
-    const [url, params] = this.endpoints.searchTournamentsByNameUrl(name, page);
-    return this.httpClient.get<MultipleTournamentsJSON>(url, {params});
+    const url = this.endpoints.searchTournamentsByNameUrl(name, page);
+    return this.httpClient.get<MultipleTournamentsJSON>(url.path, {params: url.params});
   }
 
 }

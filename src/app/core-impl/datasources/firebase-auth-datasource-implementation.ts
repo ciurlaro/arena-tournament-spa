@@ -8,6 +8,7 @@ import {fromPromise} from 'rxjs/internal-compatibility';
 import * as firebase from 'firebase';
 import {User} from 'firebase';
 import {Injectable} from '@angular/core';
+import {Claims} from '../../data/rawresponses/claims';
 import GoogleAuthProvider = firebase.auth.GoogleAuthProvider;
 import FacebookAuthProvider = firebase.auth.FacebookAuthProvider;
 import EmailAuthProvider = firebase.auth.EmailAuthProvider;
@@ -63,10 +64,12 @@ export class FirebaseAuthDatasourceImplementation extends FirebaseAuthDatasource
     }));
   }
 
-  getCurrentUserClaims(): Observable<{ [key: string]: any; }> {
+  getCurrentUserClaims(): Observable<Claims> {
     return this.userOrError().pipe(
       flatMap((user) => fromPromise(user.getIdTokenResult(true))),
-      map((value) => value.claims)
+      map((value) => {
+        return {isSubscriber: value.claims.isSubscriber ? Boolean(value.claims.isSubscriber) : false};
+      })
     );
   }
 
