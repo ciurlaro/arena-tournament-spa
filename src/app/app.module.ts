@@ -14,7 +14,6 @@ import {FirebaseAuthDatasourceImplementation} from './core-impl/datasources/fire
 import {FirebaseStorageDatasource} from './data/datasources/firebase-storage-datasource';
 import {FirebaseStorageDatasourceImplementation} from './core-impl/datasources/firebase-storage-datasource-implementation';
 import {AngularFireModule} from '@angular/fire';
-import {firebaseConfig} from '../environments/environment';
 import {MatFormFieldModule} from '@angular/material/form-field';
 import {MatInputModule} from '@angular/material/input';
 import {FormsModule, ReactiveFormsModule} from '@angular/forms';
@@ -30,6 +29,8 @@ import {ArenaTournamentDatasourceImplementation} from './core-impl/datasources/a
 import {ArenaTournamentEndpoints} from './data/datasources/arena-tournament-endpoints';
 import {ArenaTournamentEndpointsImplementation} from './core-impl/datasources/arena-tournament-endpoints-implementation';
 import {ArenaTournamentRepository} from './domain/repositories/arena-tournament-repository';
+import {firebaseConfig, hostToken, portToken, protocolToken} from '../environments/environment.common';
+import {environment} from '../environments/environment';
 
 @NgModule({
   declarations: [
@@ -60,6 +61,9 @@ import {ArenaTournamentRepository} from './domain/repositories/arena-tournament-
     {provide: FirebaseStorageDatasource, useClass: FirebaseStorageDatasourceImplementation},
     {provide: ArenaTournamentDatasource, useClass: ArenaTournamentDatasourceImplementation},
     {provide: ArenaTournamentEndpoints, useClass: ArenaTournamentEndpointsImplementation},
+    {provide: protocolToken, useValue: environment.protocol},
+    {provide: portToken, useValue: environment.port},
+    {provide: hostToken, useValue: environment.host},
     {provide: HTTP_INTERCEPTORS, useClass: AuthInterceptor, multi: true}
   ],
   bootstrap: [AppComponent]

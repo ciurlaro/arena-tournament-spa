@@ -12,11 +12,11 @@ import {SubscriptionStatusJSON} from '../../data/rawresponses/single/subscriptio
 import {AccountStatusJSON} from '../../data/rawresponses/single/account-status-json';
 import {MultipleGamesJSON} from '../../data/rawresponses/multiple/multiple-games-json';
 import {MultipleTournamentsJSON} from '../../data/rawresponses/multiple/multiple-tournaments-json';
-import {MultipleRegistrationsJSON} from '../../data/rawresponses/multiple/multiple-registrations-json';
 import {UserJSON} from '../../data/rawresponses/single/user-json';
 import {HttpClient} from '@angular/common/http';
 import {Observable} from 'rxjs';
 import {Injectable} from '@angular/core';
+import {MultipleRegistrationsJSON} from '../../data/rawresponses/multiple/multiple-registrations-json';
 
 @Injectable({
   providedIn: 'root'
@@ -108,9 +108,9 @@ export class ArenaTournamentDatasourceImplementation extends ArenaTournamentData
     return this.httpClient.get<MultipleRegistrationsJSON>(url.path, {params: url.params});
   }
 
-  getShowCaseTournaments(page: number): Observable<MultipleRegistrationsJSON> {
+  getShowCaseTournaments(page: number): Observable<MultipleTournamentsJSON> {
     const url = this.endpoints.getShowCaseTournaments(page);
-    return this.httpClient.get<MultipleRegistrationsJSON>(url.path, {params: url.params});
+    return this.httpClient.get<MultipleTournamentsJSON>(url.path, {params: url.params});
   }
 
   getTournamentById(id: number): Observable<TournamentJSON> {

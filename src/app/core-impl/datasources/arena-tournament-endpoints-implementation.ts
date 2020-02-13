@@ -1,6 +1,7 @@
 import {ArenaTournamentEndpoints, Url} from '../../data/datasources/arena-tournament-endpoints';
 import {HttpParams} from '@angular/common/http';
 import {Inject, Injectable} from '@angular/core';
+import {hostToken, portToken, protocolToken} from '../../../environments/environment.common';
 
 @Injectable({
   providedIn: 'root'
@@ -8,9 +9,9 @@ import {Inject, Injectable} from '@angular/core';
 export class ArenaTournamentEndpointsImplementation extends ArenaTournamentEndpoints {
 
   constructor(
-    @Inject('protocol') private protocol: string,
-    @Inject('host') private host: string,
-    @Inject('port') private port: number
+    @Inject(protocolToken) private protocol: string,
+    @Inject(hostToken) private host: string,
+    @Inject(portToken) private port: number
   ) {
     super();
   }

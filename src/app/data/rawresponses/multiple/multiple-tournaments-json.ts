@@ -1,11 +1,11 @@
-import {TournamentJSON} from "../single/tournament-json";
-import {LinksJSON} from "../links-json";
-import {PageJSON} from "../page-json";
+import {LinksJSON} from '../links-json';
+import {PageJSON} from '../page-json';
+import {TournamentJSON} from '../single/tournament-json';
 
 export interface MultipleTournamentsJSON {
-    readonly _embedded: TournamentEmbeddedJSON,
-    readonly _links: LinksJSON,
-    readonly page: PageJSON
+  readonly _embedded: TournamentEmbeddedJSON;
+  readonly _links: LinksJSON;
+  readonly page: PageJSON;
 }
 
 

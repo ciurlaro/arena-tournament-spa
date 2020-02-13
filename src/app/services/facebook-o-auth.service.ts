@@ -1,10 +1,10 @@
 import {Injectable} from '@angular/core';
 import * as Fb from 'fb-sdk-wrapper';
-import {facebookAppId} from '../../environments/environment';
 import {Observable} from 'rxjs';
 import {fromPromise} from 'rxjs/internal-compatibility';
 import {map} from 'rxjs/operators';
 import {OAuthTokenProvider} from './login-and-get-token';
+import {facebookAppId} from '../../environments/environment.common';
 
 @Injectable({
   providedIn: 'root'

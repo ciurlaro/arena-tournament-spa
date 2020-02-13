@@ -2,7 +2,7 @@ import {Injectable} from '@angular/core';
 import {Observable} from 'rxjs';
 import {map} from 'rxjs/operators';
 import {UseCase} from '../use-case';
-import {ArenaTournamentRepository} from '../../repositories/is-logged-in-use-case';
+import {ArenaTournamentRepository} from '../../repositories/arena-tournament-repository';
 
 @Injectable({
   providedIn: 'root',

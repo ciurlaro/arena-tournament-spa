@@ -13,6 +13,7 @@ import {AuthUserEntity} from '../entities/auth-user-entity';
 import {Claims} from '../rawresponses/claims';
 import {Url} from '../datasources/arena-tournament-endpoints';
 import {Inject} from '@angular/core';
+import {hostToken, portToken, protocolToken} from '../../../environments/environment.common';
 
 /** Interfaces */
 
@@ -118,9 +119,9 @@ export class CurrentUserMapper implements SingleFromRemoteMapper<[AuthUserEntity
 
 export abstract class AbstractLinkMapper<T> implements SingleToRemoteMapper<Url, T> {
   protected constructor(
-    @Inject('protocol') protected protocol: string,
-    @Inject('host') protected host: string,
-    @Inject('port') protected port: number
+    @Inject(protocolToken) protected protocol: string,
+    @Inject(hostToken) protected host: string,
+    @Inject(portToken) protected port: number
   ) {
   }
 

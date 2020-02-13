@@ -1,16 +1,8 @@
 export const environment = {
-  production: true
-};
+  production: true,
+  mock: false,
 
-export const firebaseConfig = {
-  apiKey: 'AIzaSyBxp-apzgy-EsK_wwrFh3rJPI32hjUWSA4',
-  authDomain: 'unito-taas-project.firebaseapp.com',
-  databaseURL: 'https://unito-taas-project.firebaseio.com',
-  projectId: 'unito-taas-project',
-  storageBucket: 'unito-taas-project.appspot.com',
-  messagingSenderId: '848647809387',
-  appId: '1:848647809387:web:d35677d9266210b8d7c42e',
-  measurementId: 'G-6HSSE0RCW1'
+  protocol: 'http',
+  host: 'localhost',
+  port: 8080
 };
-
-export const facebookAppId = '660604807780881';
