@@ -4,7 +4,7 @@ import {AuthProviders} from '../../domain/entities/auth-providers';
 import {UserEntity} from '../../domain/entities/user-entity';
 import {FirebaseAuthDatasource} from '../datasources/firebase-auth-datasource';
 import {FirebaseStorageDatasource} from '../datasources/firebase-storage-datasource';
-import {flatMap, map, mergeMap} from 'rxjs/operators';
+import {flatMap, map, mergeMap, toArray} from 'rxjs/operators';
 import {storageImagePathFor} from '../entities/auth-user-entity';
 import {ArenaTournamentRepository} from '../../domain/repositories/arena-tournament-repository';
 import {GameEntity} from '../../domain/entities/game-entity';
@@ -25,8 +25,11 @@ import {
 } from '../mappers/mappers';
 import {ModeEntity} from '../../domain/entities/mode-entity';
 import {RegistrationSplitter, TournamentSplitter} from '../splitters/splitters';
-import {MultipleRegistrationsJSON} from "../rawresponses/multiple/multiple-registrations-json";
-import {MultipleTournamentsJSON} from "../rawresponses/multiple/multiple-tournaments-json";
+import {MultipleTournamentsJSON} from '../rawresponses/multiple/multiple-tournaments-json';
+import {MultipleRegistrationsJSON} from '../rawresponses/multiple/multiple-registrations-json';
+import {fromArray} from 'rxjs/internal/observable/fromArray';
+import {TournamentJSON} from '../rawresponses/single/tournament-json';
+import {RegistrationJSON} from '../rawresponses/single/registration-json';
 
 @Injectable({
   providedIn: 'root',
@@ -227,44 +230,54 @@ export class ArenaTournamentRepositoryImplementation extends ArenaTournamentRepo
   }
 
   getRegistrationsByTournament(tournamentId: number, page: number): Observable<RegistrationEntity[]> {
-    return this.transformRegistrations(this.arenaTournamentDs.getRegistrationsByTournament(tournamentId, page));
+    return this.arenaTournamentDs.getRegistrationsByTournament(tournamentId, page).pipe(
+      flatMap((multipleRegistrationsJson) => this.transformRegistrations(multipleRegistrationsJson))
+    );
   }
 
+
   getRegistrationsByUser(userId: string, page: number): Observable<RegistrationEntity[]> {
-    return this.transformRegistrations(this.arenaTournamentDs.getRegistrationsByUser(userId, page));
+    return this.arenaTournamentDs.getRegistrationsByUser(userId, page).pipe(
+      flatMap((multipleRegistrationsJson) => this.transformRegistrations(multipleRegistrationsJson))
+    );
   }
 
   getShowcaseTournaments(page: number): Observable<TournamentEntity[]> {
-    this.transformTournaments(this.arenaTournamentDs.getShowCaseTournaments(page))
+    return this.arenaTournamentDs.getShowCaseTournaments(page).pipe(
+      flatMap((multipleTournamentsJson) => this.transformTournaments(multipleTournamentsJson))
+    );
   }
 
   getTournamentById(tournamentId: number): Observable<TournamentEntity> {
     return this.arenaTournamentDs.getTournamentById(tournamentId).pipe(
-      flatMap((tournamentJson) => {
-        return zip(
-          of(tournamentJson),
-          this.arenaTournamentDs.getGameByLink(tournamentJson._links.game!!.href),
-          this.arenaTournamentDs.getUserByLink(tournamentJson._links.admin!!.href)
-        ).pipe(
-          map((triple) => this.tournamentMapper.fromRemoteSingle(triple))
-        );
-      }));
+      flatMap(tournamentsJSON => this.fromTournamentJsonToEntity(tournamentsJSON))
+    );
   }
 
+
   getTournamentsByGame(gameName: string, page: number): Observable<TournamentEntity[]> {
-    return this.transformTournaments(this.arenaTournamentDs.getTournamentsByGameName(gameName, page))
+    return this.arenaTournamentDs.getTournamentsByGameName(gameName, page).pipe(
+      flatMap((multipleTournamentsJson) => this.transformTournaments(multipleTournamentsJson))
+    );
   }
 
   getTournamentsByMode(mode: string, page: number): Observable<TournamentEntity[]> {
-    return this.transformTournaments(this.arenaTournamentDs.getTournamentsByMode(mode, page))
+    return this.arenaTournamentDs.getTournamentsByMode(mode, page).pipe(
+      flatMap((multipleTournamentsJson) => this.transformTournaments(multipleTournamentsJson))
+    );
   }
 
   getTournamentsByUser(userId: string, page: number): Observable<TournamentEntity[]> {
-    return this.transformTournaments(this.arenaTournamentDs.getTournamentsByUser(userId, page))
+    return this.arenaTournamentDs.getTournamentsByUser(userId, page).pipe(
+      flatMap((multipleTournamentsJson) => this.transformTournaments(multipleTournamentsJson))
+    );
+
   }
 
   getTournamentsContainingTitles(title: string, page: number): Observable<TournamentEntity[]> {
-    return this.transformTournaments(this.arenaTournamentDs.getTournamentsContainingTitle(title, page));
+    return this.arenaTournamentDs.getTournamentsContainingTitle(title, page).pipe(
+      flatMap((multipleTournamentsJson) => this.transformTournaments(multipleTournamentsJson))
+    );
   }
 
   getUserById(id: string): Observable<UserEntity> {
@@ -280,7 +293,9 @@ export class ArenaTournamentRepositoryImplementation extends ArenaTournamentRepo
   }
 
   searchTournaments(title: string, page: number, gameId?: string): Observable<TournamentEntity[]> {
-    return this.transformTournaments(this.arenaTournamentDs.searchTournaments(title, page, gameId))
+    return this.arenaTournamentDs.searchTournaments(title, page, gameId).pipe(
+      flatMap((multipleTournamentsJson) => this.transformTournaments(multipleTournamentsJson))
+    );
   }
 
   updateCurrentUserEmail(email: string): Observable<boolean> {
@@ -302,20 +317,48 @@ export class ArenaTournamentRepositoryImplementation extends ArenaTournamentRepo
         return this.firebaseStorageDs.uploadFile(image, storagePath).pipe(map((_) => storagePath));
       }),
       flatMap((storagePath: string) => this.firebaseAuthDs.updateUserProfileImage(storagePath))
-    )
+    );
   }
 
   private currentUserOrError(): Observable<UserEntity> {
     return this.getCurrentUser().pipe(
-      flatMap((currentUser) => currentUser ? of(currentUser) : throwError("User not logged in."))
+      flatMap((currentUser) => currentUser ? of(currentUser) : throwError('User not logged in.'))
     );
   }
 
-  private transformTournaments(showCaseTournaments: Observable<MultipleTournamentsJSON>) {
-
+  private transformTournaments(multipleTournamentJson: MultipleTournamentsJSON): Observable<TournamentEntity[]> {
+    return fromArray(this.tournamentSplitter.split(multipleTournamentJson)).pipe(
+      flatMap((tournamentsJson) => this.fromTournamentJsonToEntity(tournamentsJson)),
+      toArray()
+    );
   }
 
-  private transformRegistrations(registrationsByTournament: Observable<MultipleRegistrationsJSON>) {
+  private transformRegistrations(multipleRegistrationsJson: MultipleRegistrationsJSON): Observable<RegistrationEntity[]> {
+    return fromArray(this.registrationSplitter.split(multipleRegistrationsJson)).pipe(
+      flatMap((registrationJson) => this.fromRegistrationJsonToEntity(registrationJson)),
+      toArray()
+    );
+  }
 
+  private fromTournamentJsonToEntity(tournamentsJSON: TournamentJSON): Observable<TournamentEntity> {
+    return zip(
+      of(tournamentsJSON),
+      this.arenaTournamentDs.getGameByLink(tournamentsJSON._links.game.href),
+      this.arenaTournamentDs.getUserByLink(tournamentsJSON._links.admin.href)
+    ).pipe(
+      map((triple) => this.tournamentMapper.fromRemoteSingle(triple))
+    );
+  }
+
+
+  private fromRegistrationJsonToEntity(registrationJSON: RegistrationJSON): Observable<RegistrationEntity> {
+    return zip(
+      of(registrationJSON),
+      this.arenaTournamentDs.getTournamentByLink(registrationJSON._links.tournament.href),
+      this.arenaTournamentDs.getGameByLink(registrationJSON._links.game.href),
+      this.arenaTournamentDs.getUserByLink(registrationJSON._links.user.href)
+    ).pipe(
+      map((quadruple) => this.registrationMapper.fromRemoteSingle(quadruple))
+    );
   }
 }

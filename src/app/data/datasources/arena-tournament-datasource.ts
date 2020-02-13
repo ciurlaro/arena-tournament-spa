@@ -50,7 +50,7 @@ export abstract class ArenaTournamentDatasource {
 
   abstract searchTournamentsByName(name: string, page: number): Observable<MultipleTournamentsJSON>;
 
-  abstract getShowCaseTournaments(page: number): Observable<MultipleRegistrationsJSON>;
+  abstract getShowCaseTournaments(page: number): Observable<MultipleTournamentsJSON>;
 
   abstract getTournamentsContainingTitle(title: string, page: number): Observable<MultipleTournamentsJSON>;
 
