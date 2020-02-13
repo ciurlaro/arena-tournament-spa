@@ -1,5 +1,5 @@
 import {Injectable} from '@angular/core';
-import {Observable, of, zip} from 'rxjs';
+import {Observable, of, throwError, zip} from 'rxjs';
 import {AuthProviders} from '../../domain/entities/auth-providers';
 import {UserEntity} from '../../domain/entities/user-entity';
 import {FirebaseAuthDatasource} from '../datasources/firebase-auth-datasource';
@@ -25,17 +25,13 @@ import {
 } from '../mappers/mappers';
 import {ModeEntity} from '../../domain/entities/mode-entity';
 import {RegistrationSplitter, TournamentSplitter} from '../splitters/splitters';
+import {MultipleRegistrationsJSON} from "../rawresponses/multiple/multiple-registrations-json";
+import {MultipleTournamentsJSON} from "../rawresponses/multiple/multiple-tournaments-json";
 
 @Injectable({
   providedIn: 'root',
 })
 export class ArenaTournamentRepositoryImplementation extends ArenaTournamentRepository {
-
-  readonly id: number;
-  readonly playersNumber: number;
-  readonly title: string;
-  readonly tournamentDescription: string;
-  readonly tournamentMode: string;
 
   constructor(
     private readonly arenaTournamentDs: ArenaTournamentDatasource,
@@ -116,7 +112,7 @@ export class ArenaTournamentRepositoryImplementation extends ArenaTournamentRepo
   }
 
 
-  getCurrentUser(): Observable<UserEntity> {
+  getCurrentUser(): Observable<UserEntity | null> {
     return this.firebaseAuthDs.getCurrentAuthUser().pipe(
       mergeMap((authUser) => {
         return authUser ? zip(this.firebaseStorageDs.getFileUrl(storageImagePathFor(authUser)), this.firebaseAuthDs.getCurrentUserClaims())
@@ -231,68 +227,95 @@ export class ArenaTournamentRepositoryImplementation extends ArenaTournamentRepo
   }
 
   getRegistrationsByTournament(tournamentId: number, page: number): Observable<RegistrationEntity[]> {
-    transformRegistrations(this.arenaTournamentDs.getRegistrationsByTournament(tournamentId, page));
+    return this.transformRegistrations(this.arenaTournamentDs.getRegistrationsByTournament(tournamentId, page));
   }
 
   getRegistrationsByUser(userId: string, page: number): Observable<RegistrationEntity[]> {
-    return undefined;
+    return this.transformRegistrations(this.arenaTournamentDs.getRegistrationsByUser(userId, page));
   }
 
   getShowcaseTournaments(page: number): Observable<TournamentEntity[]> {
-    return undefined;
+    this.transformTournaments(this.arenaTournamentDs.getShowCaseTournaments(page))
   }
 
   getTournamentById(tournamentId: number): Observable<TournamentEntity> {
-    return undefined;
+    return this.arenaTournamentDs.getTournamentById(tournamentId).pipe(
+      flatMap((tournamentJson) => {
+        return zip(
+          of(tournamentJson),
+          this.arenaTournamentDs.getGameByLink(tournamentJson._links.game!!.href),
+          this.arenaTournamentDs.getUserByLink(tournamentJson._links.admin!!.href)
+        ).pipe(
+          map((triple) => this.tournamentMapper.fromRemoteSingle(triple))
+        );
+      }));
   }
 
   getTournamentsByGame(gameName: string, page: number): Observable<TournamentEntity[]> {
-    return undefined;
+    return this.transformTournaments(this.arenaTournamentDs.getTournamentsByGameName(gameName, page))
   }
 
   getTournamentsByMode(mode: string, page: number): Observable<TournamentEntity[]> {
-    return undefined;
+    return this.transformTournaments(this.arenaTournamentDs.getTournamentsByMode(mode, page))
   }
 
   getTournamentsByUser(userId: string, page: number): Observable<TournamentEntity[]> {
-    return undefined;
+    return this.transformTournaments(this.arenaTournamentDs.getTournamentsByUser(userId, page))
   }
 
   getTournamentsContainingTitles(title: string, page: number): Observable<TournamentEntity[]> {
-    return undefined;
+    return this.transformTournaments(this.arenaTournamentDs.getTournamentsContainingTitle(title, page));
   }
 
   getUserById(id: string): Observable<UserEntity> {
-    return undefined;
+    return this.arenaTournamentDs.getUserById(id).pipe(
+      map((userJson) => this.userMapper.fromRemoteSingle(userJson))
+    );
   }
 
   searchGamesByName(gameName: string, page: number): Observable<GameEntity[]> {
-    return undefined;
+    return this.arenaTournamentDs.searchGamesByName(gameName, page).pipe(
+      map((multipleGamesJson) => this.gameMapper.fromRemoteMultiple(multipleGamesJson))
+    );
   }
 
   searchTournaments(title: string, page: number, gameId?: string): Observable<TournamentEntity[]> {
-    return undefined;
+    return this.transformTournaments(this.arenaTournamentDs.searchTournaments(title, page, gameId))
   }
 
   updateCurrentUserEmail(email: string): Observable<boolean> {
-    return undefined;
+    return this.firebaseAuthDs.updateUserEmail(email);
   }
 
   updateCurrentUserNickname(nickname: string): Observable<boolean> {
-    return undefined;
+    return this.firebaseAuthDs.updateUserNickname(nickname);
   }
 
   updateCurrentUserPassword(password: string): Observable<boolean> {
-    return undefined;
+    return this.firebaseAuthDs.updateUserPassword(password);
   }
 
   updateCurrentUserProfileImage(image: Uint8Array): Observable<boolean> {
-    return undefined;
+    return this.currentUserOrError().pipe(
+      flatMap((currentUser) => {
+        const storagePath = `users/${currentUser.id}/profile`;
+        return this.firebaseStorageDs.uploadFile(image, storagePath).pipe(map((_) => storagePath));
+      }),
+      flatMap((storagePath: string) => this.firebaseAuthDs.updateUserProfileImage(storagePath))
+    )
   }
 
-
-  private transformRegistrations(MultipleRegistrationJSON) {
-    return undefined;
+  private currentUserOrError(): Observable<UserEntity> {
+    return this.getCurrentUser().pipe(
+      flatMap((currentUser) => currentUser ? of(currentUser) : throwError("User not logged in."))
+    );
   }
 
+  private transformTournaments(showCaseTournaments: Observable<MultipleTournamentsJSON>) {
+
+  }
+
+  private transformRegistrations(registrationsByTournament: Observable<MultipleRegistrationsJSON>) {
+
+  }
 }

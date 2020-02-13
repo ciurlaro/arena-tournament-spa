@@ -63,7 +63,7 @@ export abstract class ArenaTournamentRepository {
 
   abstract getUserById(id: string): Observable<UserEntity>;
 
-  abstract getCurrentUser(): Observable<UserEntity>;
+  abstract getCurrentUser(): Observable<UserEntity | null>;
 
   abstract isCurrentUserEmailVerified(): Observable<boolean>;
 
