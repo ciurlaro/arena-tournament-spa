@@ -24,7 +24,7 @@ export class FirebaseAuthDatasourceImplementation extends FirebaseAuthDatasource
 
   createAccountWithEmailPassword(email: string, password: string): Observable<boolean> {
     return fromPromise(this.firebaseAuth.createUserWithEmailAndPassword(email, password))
-      .pipe(map((value) => true));
+      .pipe(map((_) => true));
   }
 
   getAuthMethodsForEmail(email: string): Observable<AuthProviders[]> {
@@ -89,100 +89,101 @@ export class FirebaseAuthDatasourceImplementation extends FirebaseAuthDatasource
   linkFacebookAuthProvider(token: string): Observable<boolean> {
     return this.userOrError().pipe(
       flatMap(user => fromPromise(user.linkWithCredential(FacebookAuthProvider.credential(token)))),
-      map((value) => true)
+      map((_) => true)
     );
   }
 
   linkGoogleAuthProvider(token: string): Observable<boolean> {
     return this.userOrError().pipe(
       flatMap(user => fromPromise(user.linkWithCredential(GoogleAuthProvider.credential(token)))),
-      map((value) => true)
+      map((_) => true)
     );
   }
 
   linkPasswordAuthProvider(password: string): Observable<boolean> {
     return this.userOrError().pipe(
       flatMap(user => fromPromise(user.linkWithCredential(EmailAuthProvider.credential(user.email, password)))),
-      map((value) => true)
+      map((_) => true)
     );
   }
 
   loginWithEmailPassword(email: string, password: string): Observable<boolean> {
     return fromPromise(this.firebaseAuth.signInWithEmailAndPassword(email, password)).pipe(
-      map((value) => true)
-    );
-  }
-
-  loginWithFacebookToken(token: string): Observable<boolean> {
-    return fromPromise(this.firebaseAuth.signInWithCredential(FacebookAuthProvider.credential(token))).pipe(
-      map((value) => true)
+      map((_) => true)
     );
   }
 
   loginWithGoogleToken(token: string): Observable<boolean> {
     return fromPromise(this.firebaseAuth.signInWithCredential(GoogleAuthProvider.credential(token))).pipe(
-      map((value) => true)
+      map((_) => true)
+    );
+  }
+
+  loginWithFacebookToken(token: string): Observable<boolean> {
+    return fromPromise(this.firebaseAuth.signInWithCredential(FacebookAuthProvider.credential(token))).pipe(
+      map((_) => true)
     );
   }
 
   logout(): Observable<boolean> {
     return fromPromise(this.firebaseAuth.signOut()).pipe(
-      map(value => true)
-    );
-  }
-
-  reauthenticateWithFacebook(token: string): Observable<boolean> {
-    return this.userOrError().pipe(
-      flatMap(user => user.reauthenticateWithCredential(FacebookAuthProvider.credential(token))),
-      map(value => true)
+      map(_ => true)
     );
   }
 
   reauthenticateWithGoogle(token: string): Observable<boolean> {
     return this.userOrError().pipe(
       flatMap(user => user.reauthenticateWithCredential(GoogleAuthProvider.credential(token))),
-      map(value => true)
+      map(_ => true)
+    );
+  }
+
+  reauthenticateWithFacebook(token: string): Observable<boolean> {
+    return this.userOrError().pipe(
+      flatMap(user => user.reauthenticateWithCredential(FacebookAuthProvider.credential(token))),
+      map(_ => true)
     );
   }
 
   reauthenticateWithPassword(password: string): Observable<boolean> {
     return this.userOrError().pipe(
       flatMap(user => user.reauthenticateWithCredential(EmailAuthProvider.credential(user.email, password))),
-      map(value => true)
+      map(_ => true)
     );
   }
 
   updateUserEmail(email: string): Observable<boolean> {
     return this.userOrError().pipe(
       flatMap(user => fromPromise(user.updateEmail(email))),
-      map(value => true)
+      map(_ => true)
     );
   }
 
   updateUserNickname(nickname: string): Observable<boolean> {
     return this.userOrError().pipe(
       flatMap(user => fromPromise(user.updateProfile({displayName: nickname}))),
-      map(value => true)
+      map(_ => true)
     );
   }
 
   updateUserPassword(password: string): Observable<boolean> {
     return this.userOrError().pipe(
       flatMap(user => fromPromise(user.updatePassword(password))),
-      map(value => true)
+      map(_ => true)
     );
   }
 
   updateUserProfileImage(image: string): Observable<boolean> {
     return this.userOrError().pipe(
       flatMap(user => fromPromise(user.updateProfile({photoURL: image}))),
-      map(value => true)
+      map(_ => true)
     );
   }
 
   private userOrError(): Observable<User> {
     return fromPromise(this.firebaseAuth.currentUser)
       .pipe(map((user) => {
+        console.log(user);
         if (user) {
           return user;
         } else {

@@ -34,7 +34,7 @@ export class OAuthLoginComponent implements OnDestroy {
   onGoogleButtonClicked() {
     this.loginSub = this.googleService.login()
       .pipe(
-        flatMap(isLoginSuccessful => fromPromise(this.router.navigateByUrl('home'))),
+        flatMap(_ => fromPromise(this.router.navigateByUrl('home'))),
         catchError((err) => {
           console.error(err);
           return of(false);
@@ -49,14 +49,14 @@ export class OAuthLoginComponent implements OnDestroy {
 
   private pipeLogin(from: Observable<string>, withProvider: 'google' | 'facebook'): Observable<boolean> {
     return from.pipe(
-      flatMap(token => {
+      flatMap((token) => {
         if (withProvider === 'google') {
           return this.loginWithGoogleUseCase.buildAction(token);
         } else if (withProvider === 'facebook') {
           return this.loginWithFacebookUseCase.buildAction(token);
         }
       }),
-      flatMap(isLoginSuccessful => fromPromise(this.router.navigateByUrl('home'))),
+      flatMap(_ => fromPromise(this.router.navigateByUrl('home'))),
       catchError((err) => {
         console.error(err);
         return of(false);

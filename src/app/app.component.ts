@@ -2,11 +2,11 @@ import {Component, OnDestroy, OnInit} from '@angular/core';
 import {Observable, Subscription} from 'rxjs';
 import {IsLoggedInUseCase} from './domain/usecases/login/is-logged-in-use-case';
 import {SearchTournamentFlowService} from './services/search-tournament-flow.service';
-import {ArenaTournamentRepository} from "./domain/repositories/arena-tournament-repository";
-import {GameEntity} from "./domain/entities/game-entity";
-import {UserEntity} from "./domain/entities/user-entity";
-import {TournamentEntity} from "./domain/entities/tournament-entity";
-import {RegistrationEntity} from "./domain/entities/registration-entity";
+import {ArenaTournamentRepository} from './domain/repositories/arena-tournament-repository';
+import {GameEntity} from './domain/entities/game-entity';
+import {UserEntity} from './domain/entities/user-entity';
+import {TournamentEntity} from './domain/entities/tournament-entity';
+import {RegistrationEntity} from './domain/entities/registration-entity';
 
 @Component({
   selector: 'app-root',
@@ -45,24 +45,24 @@ export class AppComponent implements OnInit, OnDestroy {
 
   repositoryCalls(): void {
 
-    const id: number = 33;
-    const email: string = "email";
-    const nickname: string = "nickname";
-    const password: string = "password";
-    const isSubscriber: boolean = true;
+    const id = 33;
+    const email = 'email';
+    const nickname = 'nickname';
+    const password = 'password';
+    const isSubscriber = true;
     const image: Uint8Array = Uint8Array.from([0, 1, 2, 3, 4]);
-    const playersNumber: number = 42;
-    const title: string = "title";
-    const modeName: string = "modeName";
-    const gameName: string = "gameName";
-    const availableModes: string[] = ["mode1", "mode2"];
-    const icon: string = "icon";
-    const description: string = "description";
+    const playersNumber = 42;
+    const title = 'title';
+    const modeName = 'modeName';
+    const gameName = 'gameName';
+    const availableModes: string[] = ['mode1', 'mode2'];
+    const icon = 'icon';
+    const description = 'description';
     const mode: string = availableModes[0];
-    const page: number = 0;
+    const page = 0;
 
-    const user: UserEntity = new UserEntity("user", email, nickname, isSubscriber, image.toString());
-    const admin: UserEntity = new UserEntity("admin", email, nickname, isSubscriber, image.toString());
+    const user: UserEntity = new UserEntity('user', email, nickname, isSubscriber, image.toString());
+    const admin: UserEntity = new UserEntity('admin', email, nickname, isSubscriber, image.toString());
     const game: GameEntity = new GameEntity(gameName, availableModes, image.toString(), icon);
     const tournament: TournamentEntity = new TournamentEntity(id, playersNumber, title, description, modeName, admin, game);
     const registration: RegistrationEntity = new RegistrationEntity(user, tournament, 69);
@@ -92,7 +92,7 @@ export class AppComponent implements OnInit, OnDestroy {
       this.repository.getRegistrationsByUser(user.id, page),
       this.repository.getRegistrationsByTournament(tournament.id, page)
     ]
-      .map((obs: Observable<any>) => obs.subscribe())
+      .map((obs: Observable<any>) => obs.subscribe());
     // (this.repository.getUserById(user.id));
     // (this.repository.getCurrentUser());
     // (this.repository.isCurrentUserEmailVerified());
