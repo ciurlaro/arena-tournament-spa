@@ -107,7 +107,7 @@ export class FirebaseAuthDatasourceImplementation extends FirebaseAuthDatasource
     );
   }
 
-  loginWithEmailPassword(email: string, password: string): Observable<boolean> {
+  loginWithEmailPassword(email: string, password: string): Observable<boolean> { //  TODO() https://firebase.google.com/docs/auth/web/auth-state-persistence
     return fromPromise(this.firebaseAuth.signInWithEmailAndPassword(email, password)).pipe(
       map((_) => true)
     );
@@ -183,7 +183,7 @@ export class FirebaseAuthDatasourceImplementation extends FirebaseAuthDatasource
   private userOrError(): Observable<User> {
     return fromPromise(this.firebaseAuth.currentUser)
       .pipe(map((user) => {
-        console.log(user);
+        // console.log(`User is: ${JSON.stringify(user)}`);
         if (user) {
           return user;
         } else {

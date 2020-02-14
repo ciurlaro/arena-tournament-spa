@@ -32,47 +32,46 @@ export class MockInterceptor implements HttpInterceptor {
     console.log(`Split words: ${JSON.stringify(words)}`);
     switch (request.url) {
       case '/isAccountVerified':
-        return 'VERIFICATION_STATUS_RESPONSE';
+        return 'verification_status_response.json';
       case '/isAccountSubscribed':
-        return 'SUBSCRIPTION_STATUS_RESPONSE';
+        return 'subscription_status_response.json';
       default:
-        return this.singleOrMultipleResponse(request, words);
+        return singleOrMultipleResponse();
     }
 
-  }
-
-  private singleOrMultipleResponse(request: HttpRequest<unknown>, words: string[]) {
-
-    switch (words.length) {
-      case 1:
-        return lengthOneCase(request, words);
-      case 2:
-        return `${words[0]}_response`;
-      default:
-        return DefaultCase();
-    }
-
-    function lengthOneCase(request2: HttpRequest<unknown>, words2: string[]): string {
-      if (request2.method === 'GET') {
-        return `multiple_${words2[0].split('?')[0]}s_response`;
-      } else {
-        return `${words2[0]}_response`;
+    function singleOrMultipleResponse() {
+      switch (words.length) {
+        case 1:
+          return lengthOneCase();
+        case 2:
+          return `${words[0]}_response`;
+        default:
+          return DefaultCase();
       }
-    }
 
-    function DefaultCase(): string {
-      if (words[1] === 'search') {
-        return `multiple_${words[0]}s_response`;
-      } else {
-        if (['game', 'tournament', 'registration', 'match', 'user'].includes(words[words.length - 1])) {
-          return `${words[words.length - 1]}_response`;
-        } else if (words[words.length - 1] === 'admin') {
-          return 'user_response';
+      function lengthOneCase(): string {
+        if (request.method === 'GET') {
+          return `multiple_${words[0].split('?')[0]}s_response`;
         } else {
-          throw new Error('Request cannot be handled by the mock engine');
+          return `${words[0]}_response`;
+        }
+      }
+
+      function DefaultCase(): string {
+        if (words[1] === 'search') {
+          return `multiple_${words[0]}s_response`;
+        } else {
+          if (['game', 'tournament', 'registration', 'match', 'user'].includes(words[words.length - 1])) {
+            return `${words[words.length - 1]}_response`;
+          } else if (words[words.length - 1] === 'admin') {
+            return 'user_response';
+          } else {
+            throw new Error('Request cannot be handled by the mock engine');
+          }
         }
       }
     }
+
   }
 }
 

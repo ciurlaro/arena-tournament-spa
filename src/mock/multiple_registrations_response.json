@@ -16,6 +16,9 @@
           },
           "user": {
             "href": "http://localhost:8080/registration/1/user"
+          },
+          "game": {
+            "href": "http://localhost:8080/registration/1/game"
           }
         }
       },
@@ -34,6 +37,9 @@
           },
           "user": {
             "href": "http://localhost:8080/registration/2/user"
+          },
+          "game": {
+            "href": "http://localhost:8080/registration/1/game"
           }
         }
       },
@@ -52,6 +58,9 @@
           },
           "user": {
             "href": "http://localhost:8080/registration/3/user"
+          },
+          "game": {
+            "href": "http://localhost:8080/registration/1/game"
           }
         }
       }

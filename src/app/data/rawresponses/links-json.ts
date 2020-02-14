@@ -1,6 +1,6 @@
-import {HrefJSON} from "./href-json";
+import {HrefJSON} from './href-json';
 
-export interface LinksJSON{
+export interface LinksJSON {
   readonly self: HrefJSON;
   readonly tournamentEntity?: HrefJSON;
   readonly gameEntity?: HrefJSON;
@@ -14,5 +14,5 @@ export interface LinksJSON{
   readonly mode?: HrefJSON;
   readonly registration?: HrefJSON;
   readonly user?: HrefJSON;
-  readonly admin?: HrefJSON
+  readonly admin?: HrefJSON;
 }

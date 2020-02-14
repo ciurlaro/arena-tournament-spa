@@ -44,7 +44,9 @@ export class OAuthLoginComponent implements OnDestroy {
   }
 
   ngOnDestroy(): void {
-    this.loginSub.unsubscribe();
+    if (this.loginSub) {
+      this.loginSub.unsubscribe();
+    }
   }
 
   private pipeLogin(from: Observable<string>, withProvider: 'google' | 'facebook'): Observable<boolean> {

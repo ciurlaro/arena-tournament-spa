@@ -4,7 +4,7 @@ import {ErrorStateMatcher} from '@angular/material/core';
 import {LoginWithEmailPasswordUseCase} from '../domain/usecases/login/login-with-email-password-use-case';
 import {Router} from '@angular/router';
 import {fromPromise} from 'rxjs/internal-compatibility';
-import {flatMap} from 'rxjs/operators';
+import {catchError, flatMap} from 'rxjs/operators';
 import {of, Subscription} from 'rxjs';
 
 @Component({
@@ -41,6 +41,10 @@ export class LoginComponent implements OnDestroy {
 
   onSubmit(data) {
     this.loginSub = this.loginWithEmailPasswordUseCase.buildAction(data).pipe(
+      catchError((err: Error, _) => {
+        this.showError(err);
+        return of(false);
+      }),
       flatMap(isLoginSuccessful => {
         if (isLoginSuccessful) {
           return fromPromise(this.router.navigateByUrl('home'));
@@ -69,6 +73,9 @@ export class LoginComponent implements OnDestroy {
     }
   }
 
+  private showError(err: Error) {
+
+  }
 }
 
 

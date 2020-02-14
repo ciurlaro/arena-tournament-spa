@@ -101,7 +101,8 @@ export class RegistrationMapper implements SingleFromRemoteMapper<[RegistrationJ
 
   constructor(
     private readonly tournamentMapper: TournamentMapper,
-    private readonly userMapper: UserMapper
+    private readonly userMapper: UserMapper,
+    private readonly gameMapper: GameMapper
   ) {
   }
 
@@ -109,7 +110,8 @@ export class RegistrationMapper implements SingleFromRemoteMapper<[RegistrationJ
     return new RegistrationEntity(
       this.userMapper.fromRemoteSingle(remote[3]),
       this.tournamentMapper.fromRemoteSingle([remote[1], remote[2], remote[3]]),
-      null,
+      this.gameMapper.fromRemoteSingle(remote[2]),
+      NaN,
       remote[0].outcome
     );
   }

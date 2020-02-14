@@ -9,7 +9,7 @@
     "self": {
       "href": "http://localhost:8080/game/go"
     },
-    "gameEntity": {
+    "game": {
       "href": "http://localhost:8080/game/go"
     }
   }

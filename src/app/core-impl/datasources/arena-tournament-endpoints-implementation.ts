@@ -95,7 +95,7 @@ export class ArenaTournamentEndpointsImplementation extends ArenaTournamentEndpo
   }
 
   registrationByIdUrl(id: number): Url {
-    return this.urlBuilderService.buildUrl(`/user/${id}`);
+    return this.urlBuilderService.buildUrl(`/registration/${id}`);
   }
 
   registrationsByTournamentUrl(tournamentId: number, page: number): Url {

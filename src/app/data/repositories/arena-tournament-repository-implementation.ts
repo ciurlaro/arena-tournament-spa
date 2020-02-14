@@ -352,6 +352,7 @@ export class ArenaTournamentRepositoryImplementation extends ArenaTournamentRepo
 
 
   private fromRegistrationJsonToEntity(registrationJSON: RegistrationJSON): Observable<RegistrationEntity> {
+    console.log(registrationJSON);
     return zip(
       of(registrationJSON),
       this.arenaTournamentDs.getTournamentByLink(registrationJSON._links.tournament.href),

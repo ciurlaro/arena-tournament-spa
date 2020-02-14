@@ -30,7 +30,7 @@ export class AppComponent implements OnInit, OnDestroy {
     this.sub = this.isLoggedInUseCase.buildAction()
       .subscribe((value) => this.isLoggedIn = value);
 
-    this.repositoryCalls();
+    // this.repositoryCalls();
   }
 
   ngOnDestroy(): void {
@@ -61,11 +61,11 @@ export class AppComponent implements OnInit, OnDestroy {
     const mode: string = availableModes[0];
     const page = 0;
 
-    const user: UserEntity = new UserEntity('user', email, nickname, isSubscriber, image.toString());
-    const admin: UserEntity = new UserEntity('admin', email, nickname, isSubscriber, image.toString());
+    const user: UserEntity = new UserEntity('user_nick', email, nickname, isSubscriber, image.toString());
+    const admin: UserEntity = new UserEntity('admin_nick', email, nickname, isSubscriber, image.toString());
     const game: GameEntity = new GameEntity(gameName, availableModes, image.toString(), icon);
     const tournament: TournamentEntity = new TournamentEntity(id, playersNumber, title, description, modeName, admin, game);
-    const registration: RegistrationEntity = new RegistrationEntity(user, tournament, 69);
+    const registration: RegistrationEntity = new RegistrationEntity(user, tournament, game, 69);
 
     this.testSubs = [
       this.repository.createTournament(playersNumber, title, description, mode, admin, game),
