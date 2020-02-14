@@ -31,6 +31,7 @@ import {ArenaTournamentEndpointsImplementation} from './core-impl/datasources/ar
 import {ArenaTournamentRepository} from './domain/repositories/arena-tournament-repository';
 import {firebaseConfig, hostToken, portToken, protocolToken} from '../environments/environment.common';
 import {environment} from '../environments/environment';
+import {MockInterceptor} from './http/mock.interceptor';
 
 @NgModule({
   declarations: [
@@ -64,7 +65,8 @@ import {environment} from '../environments/environment';
     {provide: protocolToken, useValue: environment.protocol},
     {provide: portToken, useValue: environment.port},
     {provide: hostToken, useValue: environment.host},
-    {provide: HTTP_INTERCEPTORS, useClass: AuthInterceptor, multi: true}
+    {provide: HTTP_INTERCEPTORS, useClass: AuthInterceptor, multi: true},
+    {provide: HTTP_INTERCEPTORS, useClass: MockInterceptor, multi: true}
   ],
   bootstrap: [AppComponent]
 })

@@ -292,8 +292,8 @@ export class ArenaTournamentRepositoryImplementation extends ArenaTournamentRepo
     );
   }
 
-  searchTournaments(title: string, page: number, gameId?: string): Observable<TournamentEntity[]> {
-    return this.arenaTournamentDs.searchTournaments(title, page, gameId).pipe(
+  searchTournamentsByName(title: string, page: number): Observable<TournamentEntity[]> {
+    return this.arenaTournamentDs.searchTournaments(title, page).pipe(
       flatMap((multipleTournamentsJson) => this.transformTournaments(multipleTournamentsJson))
     );
   }

@@ -53,7 +53,7 @@ export abstract class ArenaTournamentRepository {
 
   abstract getTournamentsContainingTitles(title: string, page: number): Observable<TournamentEntity[]>;
 
-  abstract searchTournaments(title: string, page: number, gameId?: string): Observable<TournamentEntity[]>;
+  abstract searchTournamentsByName(title: string, page: number): Observable<TournamentEntity[]>;
 
   abstract getRegistrationById(registrationId: number): Observable<RegistrationEntity>;
 

@@ -156,7 +156,7 @@ export class ArenaTournamentDatasourceImplementation extends ArenaTournamentData
     return this.httpClient.get<MultipleGamesJSON>(url.path, {params: url.params});
   }
 
-  searchTournaments(title: string, page: number, gameId?: string): Observable<MultipleTournamentsJSON> {
+  searchTournaments(title: string, page: number): Observable<MultipleTournamentsJSON> {
     const url = this.endpoints.searchTournaments(title, page);
     return this.httpClient.get<MultipleTournamentsJSON>(url.path, {params: url.params});
   }

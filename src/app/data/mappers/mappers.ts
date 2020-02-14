@@ -12,7 +12,7 @@ import {RegistrationJSON} from '../rawresponses/single/registration-json';
 import {AuthUserEntity} from '../entities/auth-user-entity';
 import {Claims} from '../rawresponses/claims';
 import {Url} from '../datasources/arena-tournament-endpoints';
-import {Inject} from '@angular/core';
+import {Inject, Injectable} from '@angular/core';
 import {hostToken, portToken, protocolToken} from '../../../environments/environment.common';
 
 /** Interfaces */
@@ -35,7 +35,9 @@ interface MultipleToRemoteMapper<MultipleRemote, SingleRemote, Entity> extends S
 
 
 /** Implementations */
-
+@Injectable({
+  providedIn: 'root'
+})
 export class GameMapper implements MultipleFromRemoteMapper<MultipleGamesJSON, GameJSON, GameEntity> {
   fromRemoteSingle(remote: GameJSON): GameEntity {
     return new GameEntity(remote.gameName, remote.availableModes, remote.image, remote.icon);
@@ -46,13 +48,18 @@ export class GameMapper implements MultipleFromRemoteMapper<MultipleGamesJSON, G
   }
 }
 
+@Injectable({
+  providedIn: 'root'
+})
 export class ModeMapper implements SingleFromRemoteMapper<ModeJSON, ModeEntity> {
   fromRemoteSingle(remote: ModeJSON): ModeEntity {
     return new ModeEntity(remote.modeName);
   }
 }
 
-
+@Injectable({
+  providedIn: 'root'
+})
 export class UserMapper implements SingleFromRemoteMapper<UserJSON, UserEntity> {
 
   fromRemoteSingle(remote: UserJSON): UserEntity {
@@ -61,7 +68,9 @@ export class UserMapper implements SingleFromRemoteMapper<UserJSON, UserEntity> 
 
 }
 
-
+@Injectable({
+  providedIn: 'root'
+})
 export class TournamentMapper implements SingleFromRemoteMapper<[TournamentJSON, GameJSON, UserJSON], TournamentEntity> {
 
   constructor(
@@ -84,6 +93,9 @@ export class TournamentMapper implements SingleFromRemoteMapper<[TournamentJSON,
 }
 
 
+@Injectable({
+  providedIn: 'root'
+})
 // tslint:disable-next-line:max-line-length
 export class RegistrationMapper implements SingleFromRemoteMapper<[RegistrationJSON, TournamentJSON, GameJSON, UserJSON], RegistrationEntity> {
 
@@ -102,7 +114,9 @@ export class RegistrationMapper implements SingleFromRemoteMapper<[RegistrationJ
   }
 }
 
-
+@Injectable({
+  providedIn: 'root'
+})
 export class CurrentUserMapper implements SingleFromRemoteMapper<[AuthUserEntity, Claims, string?], UserEntity> {
 
   fromRemoteSingle(remote: [AuthUserEntity, Claims, string?]): UserEntity {
@@ -116,8 +130,11 @@ export class CurrentUserMapper implements SingleFromRemoteMapper<[AuthUserEntity
   }
 }
 
-
+@Injectable({
+  providedIn: 'root'
+})
 export abstract class AbstractLinkMapper<T> implements SingleToRemoteMapper<Url, T> {
+
   protected constructor(
     @Inject(protocolToken) protected protocol: string,
     @Inject(hostToken) protected host: string,
@@ -129,7 +146,9 @@ export abstract class AbstractLinkMapper<T> implements SingleToRemoteMapper<Url,
 
 }
 
-
+@Injectable({
+  providedIn: 'root'
+})
 export class UserLinkMapper extends AbstractLinkMapper<UserEntity> {
 
   toRemoteSingle(entity: UserEntity): Url {
@@ -139,7 +158,9 @@ export class UserLinkMapper extends AbstractLinkMapper<UserEntity> {
   }
 }
 
-
+@Injectable({
+  providedIn: 'root'
+})
 export class GameLinkMapper extends AbstractLinkMapper<GameEntity> {
 
   toRemoteSingle(entity: GameEntity): Url {
@@ -149,7 +170,9 @@ export class GameLinkMapper extends AbstractLinkMapper<GameEntity> {
   }
 }
 
-
+@Injectable({
+  providedIn: 'root'
+})
 export class TournamentLinkMapper extends AbstractLinkMapper<TournamentEntity> {
 
   toRemoteSingle(entity: TournamentEntity): Url {
@@ -159,7 +182,9 @@ export class TournamentLinkMapper extends AbstractLinkMapper<TournamentEntity> {
   }
 }
 
-
+@Injectable({
+  providedIn: 'root'
+})
 export class ModeLinkMapper implements SingleFromRemoteMapper<ModeJSON, ModeEntity> {
 
   fromRemoteSingle(remote: ModeJSON): ModeEntity {

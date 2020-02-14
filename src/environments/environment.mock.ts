@@ -3,6 +3,6 @@ export const environment = {
   mock: true,
 
   protocol: 'http',
-  host: 'mock',
-  port: 4242
+  host: 'localhost',
+  port: 4200
 };

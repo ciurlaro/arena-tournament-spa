@@ -1,35 +1,40 @@
 import {Injectable} from '@angular/core';
-import {HttpEvent, HttpHandler, HttpHeaders, HttpInterceptor, HttpRequest, HttpResponse} from '@angular/common/http';
-import {Observable, of} from 'rxjs';
-import {catchError} from 'rxjs/operators';
+import {HttpEvent, HttpHandler, HttpInterceptor, HttpRequest} from '@angular/common/http';
+import {Observable} from 'rxjs';
+import {CustomHttpRequestBuilderService} from './custom-http-request-builder.service';
 
 @Injectable()
 export class MockInterceptor implements HttpInterceptor {
 
-  constructor() {
+  constructor(private urlBuilderService: CustomHttpRequestBuilderService) {
   }
 
   intercept(request: HttpRequest<unknown>, next: HttpHandler): Observable<HttpEvent<unknown>> {
-    const url = request.url;
-    const response = '/mock/mio-json.json';
-    const headers = new HttpHeaders();
-    headers.append('Content-Type', 'application/json');
-    return next.handle(request).pipe(
-      catchError((err, source) => {
-        return of(new HttpResponse({body: response, headers}));
-      })
+    console.log(request);
+    const cose = this.urlBuilderService.buildUrl(
+      `/mock/${this.handleMockResponse(request)}.json`,
+      (_) => {
+      },
+      (headers) => {
+        headers.append('Content-Type', 'application/json');
+      }
     );
+    return next.handle(request.clone({
+      headers: cose.headers,
+      url: cose.path,
+      params: cose.params
+    }));
   }
 
 
   handleMockResponse(request: HttpRequest<unknown>): string {
-    const words = request.url.split("/");
-
+    const words = request.url.split('/').slice(3);
+    console.log(`Split words: ${JSON.stringify(words)}`);
     switch (request.url) {
-      case "/isAccountVerified":
-        return "VERIFICATION_STATUS_RESPONSE";
-      case "/isAccountSubscribed":
-        return "SUBSCRIPTION_STATUS_RESPONSE";
+      case '/isAccountVerified':
+        return 'VERIFICATION_STATUS_RESPONSE';
+      case '/isAccountSubscribed':
+        return 'SUBSCRIPTION_STATUS_RESPONSE';
       default:
         return this.singleOrMultipleResponse(request, words);
     }
@@ -42,30 +47,29 @@ export class MockInterceptor implements HttpInterceptor {
       case 1:
         return lengthOneCase(request, words);
       case 2:
-        return `single_${words[0]}_response`;
+        return `${words[0]}_response`;
       default:
         return DefaultCase();
     }
 
-    function lengthOneCase(request: HttpRequest<unknown>, words: string[]): string {
-      switch (request.method) {
-        case "GET":
-          return `multiple_${words[0].split("?")[0]}_response`;
-        default:
-          return `single_${words[0]}_response`
+    function lengthOneCase(request2: HttpRequest<unknown>, words2: string[]): string {
+      if (request2.method === 'GET') {
+        return `multiple_${words2[0].split('?')[0]}s_response`;
+      } else {
+        return `${words2[0]}_response`;
       }
     }
+
     function DefaultCase(): string {
-      switch (words[1]) {
-        case "search":
-          return `multiple_${words[0]}_response`;
-        default: {
-          if (["game", "tournament", "registration", "match", "user"].includes(words[words.length - 1]))
-            return `single_${words[words.length - 1]}_response`;
-          else if (words[words.length - 1] === "admin")
-            return "single_user_response";
-          else
-            throw "Request cannot be handled by the mock engine"
+      if (words[1] === 'search') {
+        return `multiple_${words[0]}s_response`;
+      } else {
+        if (['game', 'tournament', 'registration', 'match', 'user'].includes(words[words.length - 1])) {
+          return `${words[words.length - 1]}_response`;
+        } else if (words[words.length - 1] === 'admin') {
+          return 'user_response';
+        } else {
+          throw new Error('Request cannot be handled by the mock engine');
         }
       }
     }

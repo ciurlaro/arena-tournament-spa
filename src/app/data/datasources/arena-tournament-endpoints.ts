@@ -1,4 +1,4 @@
-import {HttpParams} from '@angular/common/http';
+import {HttpHeaders, HttpParams} from '@angular/common/http';
 
 export abstract class ArenaTournamentEndpoints {
 
@@ -65,4 +65,5 @@ export abstract class ArenaTournamentEndpoints {
 export interface Url {
   path: string;
   params?: HttpParams;
+  headers?: HttpHeaders;
 }

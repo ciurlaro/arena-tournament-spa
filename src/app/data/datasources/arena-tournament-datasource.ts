@@ -70,5 +70,5 @@ export abstract class ArenaTournamentDatasource {
 
   abstract getAccountSubscription(): Observable<SubscriptionStatusJSON>;
 
-  abstract searchTournaments(title: string, page: number, gameId?: string): Observable<MultipleTournamentsJSON>;
+  abstract searchTournaments(title: string, page: number): Observable<MultipleTournamentsJSON>;
 }
