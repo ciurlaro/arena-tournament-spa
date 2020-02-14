@@ -21,4 +21,54 @@ export class MockInterceptor implements HttpInterceptor {
     );
   }
 
+
+  handleMockResponse(request: HttpRequest<unknown>): string {
+    const words = request.url.split("/");
+
+    switch (request.url) {
+      case "/isAccountVerified":
+        return "VERIFICATION_STATUS_RESPONSE";
+      case "/isAccountSubscribed":
+        return "SUBSCRIPTION_STATUS_RESPONSE";
+      default:
+        return this.singleOrMultipleResponse(request, words);
+    }
+
+  }
+
+  private singleOrMultipleResponse(request: HttpRequest<unknown>, words: string[]) {
+
+    switch (words.length) {
+      case 1:
+        return lengthOneCase(request, words);
+      case 2:
+        return `single_${words[0]}_response`;
+      default:
+        return DefaultCase();
+    }
+
+    function lengthOneCase(request: HttpRequest<unknown>, words: string[]): string {
+      switch (request.method) {
+        case "GET":
+          return `multiple_${words[0].split("?")[0]}_response`;
+        default:
+          return `single_${words[0]}_response`
+      }
+    }
+    function DefaultCase(): string {
+      switch (words[1]) {
+        case "search":
+          return `multiple_${words[0]}_response`;
+        default: {
+          if (["game", "tournament", "registration", "match", "user"].includes(words[words.length - 1]))
+            return `single_${words[words.length - 1]}_response`;
+          else if (words[words.length - 1] === "admin")
+            return "single_user_response";
+          else
+            throw "Request cannot be handled by the mock engine"
+        }
+      }
+    }
+  }
 }
+

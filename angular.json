@@ -76,7 +76,8 @@
               "namedChunks": false,
               "extractLicenses": false,
               "vendorChunk": false,
-              "buildOptimizer": false
+              "buildOptimizer": false,
+              "assets": ["src/mock"]
             }
           }
         },
