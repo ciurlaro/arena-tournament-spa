@@ -109,6 +109,7 @@ export class RegistrationMapper implements SingleFromRemoteMapper<[RegistrationJ
     return new RegistrationEntity(
       this.userMapper.fromRemoteSingle(remote[3]),
       this.tournamentMapper.fromRemoteSingle([remote[1], remote[2], remote[3]]),
+      null,
       remote[0].outcome
     );
   }

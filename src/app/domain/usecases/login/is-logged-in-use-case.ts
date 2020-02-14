@@ -14,6 +14,6 @@ export class IsLoggedInUseCase implements UseCase<boolean> {
 
   buildAction(): Observable<boolean> {
     return this.repo.getCurrentUser()
-      .pipe(map((value) => value == null));
+      .pipe(map((value) => !!value));
   }
 }
