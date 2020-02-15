@@ -34,6 +34,13 @@ import {environment} from '../environments/environment';
 import {MockInterceptor} from './http/mock.interceptor';
 import {ProfileComponent} from './home/profile/profile.component';
 
+import {NgbModule} from '@ng-bootstrap/ng-bootstrap';
+import {SnackbarComponent} from './snackbar/snackbar.component';
+import {MatSnackBarModule} from "@angular/material/snack-bar";
+import { ModalComponent } from './modal/modal.component';
+import { CreateTournamentDialogComponent } from './create-tournament-dialog/create-tournament-dialog.component';
+
+
 function providersBuilder(action: (providers: Provider[]) => void): Provider[] {
   const providers: Provider = [];
   action(providers);
@@ -47,9 +54,13 @@ function providersBuilder(action: (providers: Provider[]) => void): Provider[] {
     OAuthLoginComponent,
     HomeComponent,
     TournamentCardComponent,
-    ProfileComponent
+    ProfileComponent,
+    SnackbarComponent,
+    ModalComponent,
+    CreateTournamentDialogComponent
   ],
   imports: [
+    NgbModule,
     BrowserModule,
     AppRoutingModule,
     BrowserAnimationsModule,
@@ -62,7 +73,8 @@ function providersBuilder(action: (providers: Provider[]) => void): Provider[] {
     ReactiveFormsModule,
     MatButtonModule,
     MatCardModule,
-    HttpClientModule
+    HttpClientModule,
+    MatSnackBarModule
   ],
   providers: providersBuilder(providers => {
     providers.push({provide: ArenaTournamentRepository, useClass: ArenaTournamentRepositoryImplementation});
@@ -81,4 +93,5 @@ function providersBuilder(action: (providers: Provider[]) => void): Provider[] {
   bootstrap: [AppComponent]
 })
 export class AppModule {
+
 }

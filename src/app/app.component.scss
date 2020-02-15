@@ -1,15 +1,7 @@
-.toolbar-icon {
-  padding: 0 14px
-}
+html, body { height: 100%; }
 
 .toolbar-spacer {
   flex: 1 1 auto
-}
-
-:host {
-  //width: 100vw;
-  //height: 100vh;
-  //background-image: url("~assets/images/login-background.jpg");
 }
 
 .toolbar {
