@@ -3,7 +3,7 @@ import {Observable} from 'rxjs';
 import {AuthProviders} from '../../domain/entities/auth-providers';
 import {AuthUserEntity} from '../../data/entities/auth-user-entity';
 import {AngularFireAuth} from '@angular/fire/auth';
-import {flatMap, map} from 'rxjs/operators';
+import {first, flatMap, map} from 'rxjs/operators';
 import {fromPromise} from 'rxjs/internal-compatibility';
 import * as firebase from 'firebase';
 import {User} from 'firebase';
@@ -44,18 +44,24 @@ export class FirebaseAuthDatasourceImplementation extends FirebaseAuthDatasource
   }
 
   getCurrentAuthUser(): Observable<AuthUserEntity | null> {
-    return fromPromise(this.firebaseAuth.currentUser)
-      .pipe(map((user) => {
-        if (user) {
-          return {
-            nickname: user.displayName,
-            id: user.uid,
-            email: user.email
-          };
-        } else {
-          return null;
-        }
-      }));
+    return this.firebaseAuth.authState
+      .pipe(
+        first(),
+        map(value => {
+          return value;
+        }),
+        map((user) => {
+          if (user) {
+            return {
+              nickname: user.displayName,
+              id: user.uid,
+              email: user.email
+            };
+          } else {
+            return null;
+          }
+        })
+      );
   }
 
   getCurrentUserAuthMethods(): Observable<AuthProviders[]> {
@@ -107,8 +113,9 @@ export class FirebaseAuthDatasourceImplementation extends FirebaseAuthDatasource
     );
   }
 
-  loginWithEmailPassword(email: string, password: string): Observable<boolean> { //  TODO() https://firebase.google.com/docs/auth/web/auth-state-persistence
-    return fromPromise(this.firebaseAuth.signInWithEmailAndPassword(email, password)).pipe(
+  loginWithEmailPassword(email: string, password: string): Observable<boolean> {
+    return fromPromise(this.firebaseAuth.setPersistence(firebase.auth.Auth.Persistence.LOCAL)).pipe(
+      flatMap(() => fromPromise(this.firebaseAuth.signInWithEmailAndPassword(email, password))),
       map((_) => true)
     );
   }
@@ -190,5 +197,13 @@ export class FirebaseAuthDatasourceImplementation extends FirebaseAuthDatasource
           throw new Error('not authenticated');
         }
       }));
+  }
+
+  authChangesFlow(): Observable<boolean> {
+    return this.firebaseAuth.authState.pipe(
+      map((user) => {
+        return !!user;
+      })
+    );
   }
 }

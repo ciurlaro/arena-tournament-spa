@@ -10,7 +10,6 @@ export class MockInterceptor implements HttpInterceptor {
   }
 
   intercept(request: HttpRequest<unknown>, next: HttpHandler): Observable<HttpEvent<unknown>> {
-    console.log(request);
     const cose = this.urlBuilderService.buildUrl(
       `/mock/${this.handleMockResponse(request)}.json`,
       (_) => {
@@ -29,7 +28,6 @@ export class MockInterceptor implements HttpInterceptor {
 
   handleMockResponse(request: HttpRequest<unknown>): string {
     const words = request.url.split('/').slice(3);
-    console.log(`Split words: ${JSON.stringify(words)}`);
     switch (request.url) {
       case '/isAccountVerified':
         return 'verification_status_response.json';

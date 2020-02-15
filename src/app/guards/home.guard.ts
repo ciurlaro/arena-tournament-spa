@@ -21,7 +21,6 @@ export class HomeGuard implements CanActivate {
   ): Observable<boolean | UrlTree> | Promise<boolean | UrlTree> | boolean | UrlTree {
     return this.isLoggedInUseCase.buildAction().pipe(
       map((isLoggedIn) => {
-        console.log(`homeGuard login State intercepted is: ${isLoggedIn}`);
         if (isLoggedIn) {
           return true;
         } else {

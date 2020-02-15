@@ -4,8 +4,8 @@ import {AuthProviders} from '../../domain/entities/auth-providers';
 import {UserEntity} from '../../domain/entities/user-entity';
 import {FirebaseAuthDatasource} from '../datasources/firebase-auth-datasource';
 import {FirebaseStorageDatasource} from '../datasources/firebase-storage-datasource';
-import {flatMap, map, mergeMap, toArray} from 'rxjs/operators';
-import {storageImagePathFor} from '../entities/auth-user-entity';
+import {flatMap, map, toArray} from 'rxjs/operators';
+import {AuthUserEntity, storageImagePathFor} from '../entities/auth-user-entity';
 import {ArenaTournamentRepository} from '../../domain/repositories/arena-tournament-repository';
 import {GameEntity} from '../../domain/entities/game-entity';
 import {TournamentEntity} from '../../domain/entities/tournament-entity';
@@ -30,6 +30,7 @@ import {MultipleRegistrationsJSON} from '../rawresponses/multiple/multiple-regis
 import {fromArray} from 'rxjs/internal/observable/fromArray';
 import {TournamentJSON} from '../rawresponses/single/tournament-json';
 import {RegistrationJSON} from '../rawresponses/single/registration-json';
+import {Claims} from '../rawresponses/claims';
 
 @Injectable({
   providedIn: 'root',
@@ -117,23 +118,15 @@ export class ArenaTournamentRepositoryImplementation extends ArenaTournamentRepo
 
   getCurrentUser(): Observable<UserEntity | null> {
     return this.firebaseAuthDs.getCurrentAuthUser().pipe(
-      mergeMap((authUser) => {
+      flatMap((authUser) => {
         return authUser ? zip(this.firebaseStorageDs.getFileUrl(storageImagePathFor(authUser)), this.firebaseAuthDs.getCurrentUserClaims())
-          .pipe(map(([userProfileImageUrl, claims]) => {
-            const user: UserEntity = {
-              email: authUser.email,
-              id: authUser.id,
-              image: userProfileImageUrl,
-              nickname: authUser.nickname,
-              isSubscriber: claims.isSubscriber
-            };
-            return user;
-          })) : new Observable<UserEntity>(subscriber => {
-          subscriber.next(null);
-          subscriber.complete();
-        });
+          .pipe(map(([userProfileImageUrl, claims]) => this.buildUserEntity(userProfileImageUrl, claims, authUser))) : of<UserEntity>(null);
       })
     );
+  }
+
+  authChangesFlow(): Observable<boolean> {
+    return this.firebaseAuthDs.authChangesFlow();
   }
 
   createGame(gameName: string, availableModes: string[], image: string, icon: string): Observable<GameEntity> {
@@ -352,7 +345,6 @@ export class ArenaTournamentRepositoryImplementation extends ArenaTournamentRepo
 
 
   private fromRegistrationJsonToEntity(registrationJSON: RegistrationJSON): Observable<RegistrationEntity> {
-    console.log(registrationJSON);
     return zip(
       of(registrationJSON),
       this.arenaTournamentDs.getTournamentByLink(registrationJSON._links.tournament.href),
@@ -361,5 +353,9 @@ export class ArenaTournamentRepositoryImplementation extends ArenaTournamentRepo
     ).pipe(
       map((quadruple) => this.registrationMapper.fromRemoteSingle(quadruple))
     );
+  }
+
+  private buildUserEntity(userProfileImageUrl: string, claims: Claims, authUser: AuthUserEntity): UserEntity {
+    return new UserEntity(authUser.id, authUser.email, authUser.nickname, claims.isSubscriber, userProfileImageUrl);
   }
 }

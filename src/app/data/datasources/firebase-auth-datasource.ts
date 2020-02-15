@@ -45,4 +45,6 @@ export abstract class FirebaseAuthDatasource {
   abstract getCurrentUserClaims(): Observable<Claims>;
 
   abstract isCurrentUserEmailVerified(): Observable<boolean>;
+
+  abstract authChangesFlow(): Observable<boolean>;
 }

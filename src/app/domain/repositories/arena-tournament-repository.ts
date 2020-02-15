@@ -92,4 +92,6 @@ export abstract class ArenaTournamentRepository {
   abstract reauthenticateWithFacebookToken(token: string): Observable<boolean>;
 
   abstract isCurrentUserSubscriber(): Observable<boolean>;
+
+  abstract authChangesFlow(): Observable<boolean>;
 }

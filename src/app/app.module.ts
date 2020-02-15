@@ -1,5 +1,5 @@
 import {BrowserModule} from '@angular/platform-browser';
-import {NgModule} from '@angular/core';
+import {NgModule, Provider} from '@angular/core';
 
 import {AppRoutingModule} from './app-routing.module';
 import {AppComponent} from './app.component';
@@ -32,6 +32,13 @@ import {ArenaTournamentRepository} from './domain/repositories/arena-tournament-
 import {firebaseConfig, hostToken, portToken, protocolToken} from '../environments/environment.common';
 import {environment} from '../environments/environment';
 import {MockInterceptor} from './http/mock.interceptor';
+import {ProfileComponent} from './home/profile/profile.component';
+
+function providersBuilder(action: (providers: Provider[]) => void): Provider[] {
+  const providers: Provider = [];
+  action(providers);
+  return providers;
+}
 
 @NgModule({
   declarations: [
@@ -39,7 +46,8 @@ import {MockInterceptor} from './http/mock.interceptor';
     LoginComponent,
     OAuthLoginComponent,
     HomeComponent,
-    TournamentCardComponent
+    TournamentCardComponent,
+    ProfileComponent
   ],
   imports: [
     BrowserModule,
@@ -56,18 +64,20 @@ import {MockInterceptor} from './http/mock.interceptor';
     MatCardModule,
     HttpClientModule
   ],
-  providers: [
-    {provide: ArenaTournamentRepository, useClass: ArenaTournamentRepositoryImplementation},
-    {provide: FirebaseAuthDatasource, useClass: FirebaseAuthDatasourceImplementation},
-    {provide: FirebaseStorageDatasource, useClass: FirebaseStorageDatasourceImplementation},
-    {provide: ArenaTournamentDatasource, useClass: ArenaTournamentDatasourceImplementation},
-    {provide: ArenaTournamentEndpoints, useClass: ArenaTournamentEndpointsImplementation},
-    {provide: protocolToken, useValue: environment.protocol},
-    {provide: portToken, useValue: environment.port},
-    {provide: hostToken, useValue: environment.host},
-    {provide: HTTP_INTERCEPTORS, useClass: AuthInterceptor, multi: true},
-    {provide: HTTP_INTERCEPTORS, useClass: MockInterceptor, multi: true}
-  ],
+  providers: providersBuilder(providers => {
+    providers.push({provide: ArenaTournamentRepository, useClass: ArenaTournamentRepositoryImplementation});
+    providers.push({provide: FirebaseAuthDatasource, useClass: FirebaseAuthDatasourceImplementation});
+    providers.push({provide: FirebaseStorageDatasource, useClass: FirebaseStorageDatasourceImplementation});
+    providers.push({provide: ArenaTournamentDatasource, useClass: ArenaTournamentDatasourceImplementation});
+    providers.push({provide: ArenaTournamentEndpoints, useClass: ArenaTournamentEndpointsImplementation});
+    providers.push({provide: protocolToken, useValue: environment.protocol});
+    providers.push({provide: portToken, useValue: environment.port});
+    providers.push({provide: hostToken, useValue: environment.host});
+    providers.push({provide: HTTP_INTERCEPTORS, useClass: AuthInterceptor, multi: true});
+    if (environment.mock) {
+      providers.push({provide: HTTP_INTERCEPTORS, useClass: MockInterceptor, multi: true});
+    }
+  }),
   bootstrap: [AppComponent]
 })
 export class AppModule {

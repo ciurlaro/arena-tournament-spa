@@ -1,12 +1,12 @@
 import {Component, OnDestroy, OnInit} from '@angular/core';
 import {Observable, Subscription} from 'rxjs';
-import {IsLoggedInUseCase} from './domain/usecases/login/is-logged-in-use-case';
 import {SearchTournamentFlowService} from './services/search-tournament-flow.service';
 import {ArenaTournamentRepository} from './domain/repositories/arena-tournament-repository';
 import {GameEntity} from './domain/entities/game-entity';
 import {UserEntity} from './domain/entities/user-entity';
 import {TournamentEntity} from './domain/entities/tournament-entity';
 import {RegistrationEntity} from './domain/entities/registration-entity';
+import {AuthChangesUseCase} from './domain/usecases/login/auth-changes-use-case';
 
 @Component({
   selector: 'app-root',
@@ -15,21 +15,20 @@ import {RegistrationEntity} from './domain/entities/registration-entity';
 })
 export class AppComponent implements OnInit, OnDestroy {
 
-  isLoggedIn: boolean;
+  isLoggedIn = false;
   private sub: Subscription;
   private testSubs: Subscription[] = [];
 
   constructor(
-    public isLoggedInUseCase: IsLoggedInUseCase,
+    private authChangesUseCase: AuthChangesUseCase,
     private searchTournamentFlowService: SearchTournamentFlowService,
     private repository: ArenaTournamentRepository
   ) {
   }
 
   ngOnInit(): void {
-    this.sub = this.isLoggedInUseCase.buildAction()
+    this.sub = this.authChangesUseCase.buildAction()
       .subscribe((value) => this.isLoggedIn = value);
-
     // this.repositoryCalls();
   }
 
