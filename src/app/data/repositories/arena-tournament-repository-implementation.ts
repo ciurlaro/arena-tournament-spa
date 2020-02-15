@@ -57,6 +57,7 @@ export class ArenaTournamentRepositoryImplementation extends ArenaTournamentRepo
     super();
   }
 
+  authFlow = this.firebaseAuthDs.authFlow;
 
   createAccountWithEmailAndPassword(email: string, password: string): Observable<boolean> {
     return this.firebaseAuthDs.createAccountWithEmailPassword(email, password);
@@ -99,8 +100,8 @@ export class ArenaTournamentRepositoryImplementation extends ArenaTournamentRepo
     return this.firebaseAuthDs.loginWithFacebookToken(token);
   }
 
-  loginWithGoogleToken(token: string): Observable<boolean> {
-    return this.firebaseAuthDs.loginWithGoogleToken(token);
+  loginWithGooglePopup(): Observable<boolean> {
+    return this.firebaseAuthDs.loginWithGooglePopup();
   }
 
   logout(): Observable<boolean> {
@@ -123,10 +124,6 @@ export class ArenaTournamentRepositoryImplementation extends ArenaTournamentRepo
           .pipe(map(([userProfileImageUrl, claims]) => this.buildUserEntity(userProfileImageUrl, claims, authUser))) : of<UserEntity>(null);
       })
     );
-  }
-
-  authChangesFlow(): Observable<boolean> {
-    return this.firebaseAuthDs.authChangesFlow();
   }
 
   createGame(gameName: string, availableModes: string[], image: string, icon: string): Observable<GameEntity> {
@@ -355,6 +352,7 @@ export class ArenaTournamentRepositoryImplementation extends ArenaTournamentRepo
     );
   }
 
+  // noinspection JSMethodCanBeStatic
   private buildUserEntity(userProfileImageUrl: string, claims: Claims, authUser: AuthUserEntity): UserEntity {
     return new UserEntity(authUser.id, authUser.email, authUser.nickname, claims.isSubscriber, userProfileImageUrl);
   }

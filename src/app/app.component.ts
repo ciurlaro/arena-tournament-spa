@@ -1,12 +1,15 @@
 import {Component, OnDestroy, OnInit} from '@angular/core';
-import {Observable, Subscription} from 'rxjs';
+import {EMPTY, Observable, Subscription} from 'rxjs';
 import {SearchTournamentFlowService} from './services/search-tournament-flow.service';
 import {ArenaTournamentRepository} from './domain/repositories/arena-tournament-repository';
 import {GameEntity} from './domain/entities/game-entity';
 import {UserEntity} from './domain/entities/user-entity';
 import {TournamentEntity} from './domain/entities/tournament-entity';
 import {RegistrationEntity} from './domain/entities/registration-entity';
-import {AuthChangesUseCase} from './domain/usecases/login/auth-changes-use-case';
+import {Router} from '@angular/router';
+import {AuthStatus} from './data/datasources/firebase-auth-datasource';
+import {flatMap} from 'rxjs/operators';
+import {fromPromise} from 'rxjs/internal-compatibility';
 
 @Component({
   selector: 'app-root',
@@ -18,18 +21,37 @@ export class AppComponent implements OnInit, OnDestroy {
   isLoggedIn = false;
   private sub: Subscription;
   private testSubs: Subscription[] = [];
+  showLoadingLoginBar = false;
 
   constructor(
-    private authChangesUseCase: AuthChangesUseCase,
     private searchTournamentFlowService: SearchTournamentFlowService,
-    private repository: ArenaTournamentRepository
+    private repository: ArenaTournamentRepository,
+    private router: Router
   ) {
   }
 
   ngOnInit(): void {
-    this.sub = this.authChangesUseCase.buildAction()
-      .subscribe((value) => this.isLoggedIn = value);
-    // this.repositoryCalls();
+    this.sub = this.repository.authFlow
+      .pipe(
+        flatMap((authStatus) => {
+          switch (authStatus) {
+            case AuthStatus.AUTHENTICATED: {
+              this.showLoadingLoginBar = false;
+              return fromPromise(this.router.navigateByUrl('home'));
+            }
+            case AuthStatus.UNAUTHENTICATED: {
+              this.showLoadingLoginBar = false;
+              return fromPromise(this.router.navigateByUrl('login'));
+            }
+            case AuthStatus.STARTING_AUTH_FLOW: {
+              this.showLoadingLoginBar = true;
+              return EMPTY;
+            }
+          }
+        })
+      )
+      .subscribe();
+    // this.repositoryCalls();\
   }
 
   ngOnDestroy(): void {

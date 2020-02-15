@@ -4,6 +4,9 @@ import {AuthUserEntity} from '../entities/auth-user-entity';
 import {Claims} from '../rawresponses/claims';
 
 export abstract class FirebaseAuthDatasource {
+
+  abstract authFlow: Observable<AuthStatus>;
+
   abstract updateUserEmail(email: string): Observable<boolean>;
 
   abstract updateUserPassword(password: string): Observable<boolean>;
@@ -16,7 +19,7 @@ export abstract class FirebaseAuthDatasource {
 
   abstract loginWithFacebookToken(token: string): Observable<boolean>;
 
-  abstract loginWithGoogleToken(token: string): Observable<boolean>;
+  abstract loginWithGooglePopup(): Observable<boolean>;
 
   abstract logout(): Observable<boolean>;
 
@@ -46,5 +49,8 @@ export abstract class FirebaseAuthDatasource {
 
   abstract isCurrentUserEmailVerified(): Observable<boolean>;
 
-  abstract authChangesFlow(): Observable<boolean>;
+}
+
+export enum AuthStatus {
+  AUTHENTICATED, UNAUTHENTICATED, STARTING_AUTH_FLOW
 }

@@ -1,9 +1,9 @@
-import {FirebaseAuthDatasource} from '../../data/datasources/firebase-auth-datasource';
-import {Observable} from 'rxjs';
+import {AuthStatus, FirebaseAuthDatasource} from '../../data/datasources/firebase-auth-datasource';
+import {Observable, of, Subject} from 'rxjs';
 import {AuthProviders} from '../../domain/entities/auth-providers';
 import {AuthUserEntity} from '../../data/entities/auth-user-entity';
 import {AngularFireAuth} from '@angular/fire/auth';
-import {first, flatMap, map} from 'rxjs/operators';
+import {catchError, first, flatMap, map} from 'rxjs/operators';
 import {fromPromise} from 'rxjs/internal-compatibility';
 import * as firebase from 'firebase';
 import {User} from 'firebase';
@@ -18,8 +18,13 @@ import EmailAuthProvider = firebase.auth.EmailAuthProvider;
 })
 export class FirebaseAuthDatasourceImplementation extends FirebaseAuthDatasource {
 
+  private authSubject = new Subject<AuthStatus>();
+
+  authFlow = this.authSubject.asObservable();
+
   constructor(private firebaseAuth: AngularFireAuth) {
     super();
+    firebaseAuth.authState.subscribe((user) => this.authSubject.next(user ? AuthStatus.AUTHENTICATED : AuthStatus.UNAUTHENTICATED));
   }
 
   createAccountWithEmailPassword(email: string, password: string): Observable<boolean> {
@@ -95,40 +100,68 @@ export class FirebaseAuthDatasourceImplementation extends FirebaseAuthDatasource
   linkFacebookAuthProvider(token: string): Observable<boolean> {
     return this.userOrError().pipe(
       flatMap(user => fromPromise(user.linkWithCredential(FacebookAuthProvider.credential(token)))),
-      map((_) => true)
+      map((_) => true),
+      catchError((err) => {
+        console.log(err);
+        return of(false);
+      })
     );
   }
 
   linkGoogleAuthProvider(token: string): Observable<boolean> {
     return this.userOrError().pipe(
       flatMap(user => fromPromise(user.linkWithCredential(GoogleAuthProvider.credential(token)))),
-      map((_) => true)
+      map((_) => true),
+      catchError((err) => {
+        console.log(err);
+        return of(false);
+      })
     );
   }
 
   linkPasswordAuthProvider(password: string): Observable<boolean> {
     return this.userOrError().pipe(
       flatMap(user => fromPromise(user.linkWithCredential(EmailAuthProvider.credential(user.email, password)))),
-      map((_) => true)
+      map((_) => true),
+      catchError((err) => {
+        console.log(err);
+        return of(false);
+      })
     );
   }
 
   loginWithEmailPassword(email: string, password: string): Observable<boolean> {
     return fromPromise(this.firebaseAuth.setPersistence(firebase.auth.Auth.Persistence.LOCAL)).pipe(
       flatMap(() => fromPromise(this.firebaseAuth.signInWithEmailAndPassword(email, password))),
-      map((_) => true)
+      map((_) => true),
+      catchError((err) => {
+        this.authSubject.next(AuthStatus.UNAUTHENTICATED);
+        console.log(err);
+        return of(false);
+      })
     );
   }
 
-  loginWithGoogleToken(token: string): Observable<boolean> {
-    return fromPromise(this.firebaseAuth.signInWithCredential(GoogleAuthProvider.credential(token))).pipe(
-      map((_) => true)
+  loginWithGooglePopup(): Observable<boolean> {
+    this.authSubject.next(AuthStatus.STARTING_AUTH_FLOW);
+    return fromPromise(this.firebaseAuth.signInWithPopup(new GoogleAuthProvider())).pipe(
+      map((_) => true),
+      catchError(err => {
+        this.authSubject.next(AuthStatus.UNAUTHENTICATED);
+        console.log(err);
+        return of(false);
+      })
     );
   }
 
   loginWithFacebookToken(token: string): Observable<boolean> {
     return fromPromise(this.firebaseAuth.signInWithCredential(FacebookAuthProvider.credential(token))).pipe(
-      map((_) => true)
+      map((_) => true),
+      catchError((err) => {
+        this.authSubject.next(AuthStatus.UNAUTHENTICATED);
+        console.log(err);
+        return of(false);
+      })
     );
   }
 
@@ -199,11 +232,4 @@ export class FirebaseAuthDatasourceImplementation extends FirebaseAuthDatasource
       }));
   }
 
-  authChangesFlow(): Observable<boolean> {
-    return this.firebaseAuth.authState.pipe(
-      map((user) => {
-        return !!user;
-      })
-    );
-  }
 }

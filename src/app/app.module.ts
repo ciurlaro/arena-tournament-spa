@@ -36,9 +36,8 @@ import {ProfileComponent} from './home/profile/profile.component';
 
 import {NgbModule} from '@ng-bootstrap/ng-bootstrap';
 import {SnackbarComponent} from './snackbar/snackbar.component';
-import {MatSnackBarModule} from "@angular/material/snack-bar";
-import { ModalComponent } from './modal/modal.component';
-import { CreateTournamentDialogComponent } from './create-tournament-dialog/create-tournament-dialog.component';
+import {MatSnackBarModule} from '@angular/material/snack-bar';
+import {MatProgressBarModule} from '@angular/material/progress-bar';
 
 
 function providersBuilder(action: (providers: Provider[]) => void): Provider[] {
@@ -55,9 +54,7 @@ function providersBuilder(action: (providers: Provider[]) => void): Provider[] {
     HomeComponent,
     TournamentCardComponent,
     ProfileComponent,
-    SnackbarComponent,
-    ModalComponent,
-    CreateTournamentDialogComponent
+    SnackbarComponent
   ],
   imports: [
     NgbModule,
@@ -74,7 +71,8 @@ function providersBuilder(action: (providers: Provider[]) => void): Provider[] {
     MatButtonModule,
     MatCardModule,
     HttpClientModule,
-    MatSnackBarModule
+    MatSnackBarModule,
+    MatProgressBarModule
   ],
   providers: providersBuilder(providers => {
     providers.push({provide: ArenaTournamentRepository, useClass: ArenaTournamentRepositoryImplementation});

@@ -2,10 +2,7 @@ import {Component, OnDestroy} from '@angular/core';
 import {FormBuilder, FormControl, FormGroup, FormGroupDirective, NgForm, Validators} from '@angular/forms';
 import {ErrorStateMatcher} from '@angular/material/core';
 import {LoginWithEmailPasswordUseCase} from '../domain/usecases/login/login-with-email-password-use-case';
-import {Router} from '@angular/router';
-import {fromPromise} from 'rxjs/internal-compatibility';
-import {catchError, flatMap} from 'rxjs/operators';
-import {of, Subscription} from 'rxjs';
+import {Subscription} from 'rxjs';
 
 @Component({
   selector: 'app-login',
@@ -30,8 +27,7 @@ export class LoginComponent implements OnDestroy {
 
   constructor(
     private formBuilder: FormBuilder,
-    private loginWithEmailPasswordUseCase: LoginWithEmailPasswordUseCase,
-    private router: Router
+    private loginWithEmailPasswordUseCase: LoginWithEmailPasswordUseCase
   ) {
     this.loginFormGroup = this.formBuilder.group({
       email: this.emailFormControl,
@@ -40,19 +36,7 @@ export class LoginComponent implements OnDestroy {
   }
 
   onSubmit(data) {
-    this.loginSub = this.loginWithEmailPasswordUseCase.buildAction(data).pipe(
-      catchError((err: Error, _) => {
-        this.showError(err);
-        return of(false);
-      }),
-      flatMap(isLoginSuccessful => {
-        if (isLoginSuccessful) {
-          return fromPromise(this.router.navigateByUrl('home'));
-        } else {
-          return of(false);
-        }
-      })
-    )
+    this.loginSub = this.loginWithEmailPasswordUseCase.buildAction(data)
       .subscribe();
   }
 
@@ -73,9 +57,6 @@ export class LoginComponent implements OnDestroy {
     }
   }
 
-  private showError(err: Error) {
-
-  }
 }
 
 
