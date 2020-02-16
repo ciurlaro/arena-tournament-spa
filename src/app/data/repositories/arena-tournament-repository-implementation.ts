@@ -121,9 +121,13 @@ export class ArenaTournamentRepositoryImplementation extends ArenaTournamentRepo
     return this.firebaseAuthDs.getCurrentAuthUser().pipe(
       flatMap((authUser) => {
         return authUser ? zip(this.firebaseStorageDs.getFileUrl(storageImagePathFor(authUser)), this.firebaseAuthDs.getCurrentUserClaims())
-          .pipe(map(([userProfileImageUrl, claims]) => this.buildUserEntity(userProfileImageUrl, claims, authUser))) : of<UserEntity>(null);
+          .pipe(map(([userProfileImageUrl, claims]) => buildUserEntity(userProfileImageUrl, claims, authUser))) : of<UserEntity>(null);
       })
     );
+
+    function buildUserEntity(userProfileImageUrl: string, claims: Claims, authUser: AuthUserEntity): UserEntity {
+      return new UserEntity(authUser.id, authUser.email, authUser.nickname, claims.isSubscriber, userProfileImageUrl);
+    }
   }
 
   createGame(gameName: string, availableModes: string[], image: string, icon: string): Observable<GameEntity> {
@@ -340,7 +344,6 @@ export class ArenaTournamentRepositoryImplementation extends ArenaTournamentRepo
     );
   }
 
-
   private fromRegistrationJsonToEntity(registrationJSON: RegistrationJSON): Observable<RegistrationEntity> {
     return zip(
       of(registrationJSON),
@@ -350,10 +353,5 @@ export class ArenaTournamentRepositoryImplementation extends ArenaTournamentRepo
     ).pipe(
       map((quadruple) => this.registrationMapper.fromRemoteSingle(quadruple))
     );
-  }
-
-  // noinspection JSMethodCanBeStatic
-  private buildUserEntity(userProfileImageUrl: string, claims: Claims, authUser: AuthUserEntity): UserEntity {
-    return new UserEntity(authUser.id, authUser.email, authUser.nickname, claims.isSubscriber, userProfileImageUrl);
   }
 }

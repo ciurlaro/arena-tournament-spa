@@ -10,6 +10,8 @@ import {Router} from '@angular/router';
 import {AuthStatus} from './data/datasources/firebase-auth-datasource';
 import {flatMap} from 'rxjs/operators';
 import {fromPromise} from 'rxjs/internal-compatibility';
+import { ModalModule } from 'ngx-bootstrap';
+
 
 @Component({
   selector: 'app-root',
@@ -37,6 +39,7 @@ export class AppComponent implements OnInit, OnDestroy {
           switch (authStatus) {
             case AuthStatus.AUTHENTICATED: {
               this.showLoadingLoginBar = false;
+              this.isLoggedIn = true;
               return fromPromise(this.router.navigateByUrl('home'));
             }
             case AuthStatus.UNAUTHENTICATED: {

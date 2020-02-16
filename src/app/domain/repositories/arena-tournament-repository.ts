@@ -5,7 +5,7 @@ import {TournamentEntity} from '../entities/tournament-entity';
 import {GameEntity} from '../entities/game-entity';
 import {RegistrationEntity} from '../entities/registration-entity';
 import {ModeEntity} from '../entities/mode-entity';
-import {AuthStatus} from '../../data/datasources/firebase-auth-datasource';
+import {AuthStatus} from "../../data/datasources/firebase-auth-datasource";
 
 export abstract class ArenaTournamentRepository {
 

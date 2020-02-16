@@ -38,6 +38,7 @@ import {NgbModule} from '@ng-bootstrap/ng-bootstrap';
 import {SnackbarComponent} from './snackbar/snackbar.component';
 import {MatSnackBarModule} from '@angular/material/snack-bar';
 import {MatProgressBarModule} from '@angular/material/progress-bar';
+import {CreateTournamentComponent} from './home/profile/create-tournament/create-tournament.component';
 
 
 function providersBuilder(action: (providers: Provider[]) => void): Provider[] {
@@ -54,7 +55,8 @@ function providersBuilder(action: (providers: Provider[]) => void): Provider[] {
     HomeComponent,
     TournamentCardComponent,
     ProfileComponent,
-    SnackbarComponent
+    SnackbarComponent,
+    CreateTournamentComponent
   ],
   imports: [
     NgbModule,

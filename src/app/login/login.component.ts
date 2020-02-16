@@ -22,7 +22,7 @@ export class LoginComponent implements OnDestroy {
     Validators.required,
     Validators.minLength(6)
   ]);
-  matcher = new FieldsStateMatcher();
+  matcher = new FieldsMatcher();
   private loginSub: Subscription;
 
   constructor(
@@ -52,7 +52,7 @@ export class LoginComponent implements OnDestroy {
   }
 
   ngOnDestroy(): void {
-    if (!this.loginSub) {
+    if (this.loginSub) {
       this.loginSub.unsubscribe();
     }
   }
@@ -60,7 +60,7 @@ export class LoginComponent implements OnDestroy {
 }
 
 
-export class FieldsStateMatcher implements ErrorStateMatcher {
+export class FieldsMatcher implements ErrorStateMatcher {
   isErrorState(control: FormControl | null, form: FormGroupDirective | NgForm | null): boolean {
     const isSubmitted = form && form.submitted;
     return !!(control && control.invalid && (control.dirty || control.touched || isSubmitted));
