@@ -31,7 +31,7 @@ export abstract class FirebaseAuthDatasource {
 
   abstract linkFacebookAuthProvider(token: string): Observable<boolean>;
 
-  abstract linkGoogleAuthProvider(token: string): Observable<boolean>;
+  abstract linkGoogleAuthProviderWithPopup(): Observable<boolean>;
 
   abstract linkPasswordAuthProvider(password: string): Observable<boolean>;
 

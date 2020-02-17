@@ -108,9 +108,9 @@ export class FirebaseAuthDatasourceImplementation extends FirebaseAuthDatasource
     );
   }
 
-  linkGoogleAuthProvider(token: string): Observable<boolean> {
+  linkGoogleAuthProviderWithPopup(): Observable<boolean> {
     return this.userOrError().pipe(
-      flatMap(user => fromPromise(user.linkWithCredential(GoogleAuthProvider.credential(token)))),
+      flatMap(user => fromPromise(user.linkWithPopup(new GoogleAuthProvider()))),
       map((_) => true),
       catchError((err) => {
         console.log(err);

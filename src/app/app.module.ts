@@ -1,5 +1,5 @@
 import {BrowserModule} from '@angular/platform-browser';
-import {NgModule, Provider, Component, Input} from '@angular/core';
+import {NgModule, Provider} from '@angular/core';
 
 import {AppRoutingModule} from './app-routing.module';
 import {AppComponent} from './app.component';
@@ -39,8 +39,10 @@ import {SnackbarComponent} from './snackbar/snackbar.component';
 import {MatSnackBarModule} from '@angular/material/snack-bar';
 import {MatProgressBarModule} from '@angular/material/progress-bar';
 import {CreateTournamentFormComponent} from './home/profile/create-tournament/create-tournament-form/create-tournament-form.component';
-import { CreateTournamentButtonComponent } from './home/profile/create-tournament/create-tournament-button/create-tournament-button.component';
-import { NavbarComponent } from './navbar/navbar.component';
+// tslint:disable-next-line:max-line-length
+import {CreateTournamentButtonComponent} from './home/profile/create-tournament/create-tournament-button/create-tournament-button.component';
+import {NavbarComponent} from './navbar/navbar.component';
+import {ChoosePasswordComponent} from './home/profile/choose-password/choose-password.component';
 
 
 function providersBuilder(action: (providers: Provider[]) => void): Provider[] {
@@ -60,7 +62,8 @@ function providersBuilder(action: (providers: Provider[]) => void): Provider[] {
     SnackbarComponent,
     CreateTournamentFormComponent,
     CreateTournamentButtonComponent,
-    NavbarComponent
+    NavbarComponent,
+    ChoosePasswordComponent
   ],
   imports: [
     NgbModule,

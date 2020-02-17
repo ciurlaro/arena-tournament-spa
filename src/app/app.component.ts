@@ -1,4 +1,4 @@
-import {Component, Input, OnDestroy, OnInit} from '@angular/core';
+import {Component, OnDestroy, OnInit} from '@angular/core';
 import {EMPTY, Observable, Subscription} from 'rxjs';
 import {SearchTournamentFlowService} from './services/search-tournament-flow.service';
 import {ArenaTournamentRepository} from './domain/repositories/arena-tournament-repository';
@@ -10,6 +10,8 @@ import {Router} from '@angular/router';
 import {AuthStatus} from './data/datasources/firebase-auth-datasource';
 import {flatMap} from 'rxjs/operators';
 import {fromPromise} from 'rxjs/internal-compatibility';
+import {MatIconRegistry} from '@angular/material/icon';
+import {DomSanitizer} from '@angular/platform-browser';
 
 
 @Component({
@@ -19,7 +21,7 @@ import {fromPromise} from 'rxjs/internal-compatibility';
 })
 export class AppComponent implements OnInit, OnDestroy {
 
-  isLoggedIn = false;
+  showLoginStuff = false;
   private sub: Subscription;
   private testSubs: Subscription[] = [];
   showLoadingLoginBar = false;
@@ -27,8 +29,21 @@ export class AppComponent implements OnInit, OnDestroy {
   constructor(
     private searchTournamentFlowService: SearchTournamentFlowService,
     private repository: ArenaTournamentRepository,
-    private router: Router
+    private router: Router,
+    private matIconRegistry: MatIconRegistry,
+    private domSanitizer: DomSanitizer
   ) {
+
+    const add = (iconName: string) => {
+      matIconRegistry.addSvgIcon(
+        iconName,
+        domSanitizer.bypassSecurityTrustResourceUrl(`assets/icons/${iconName}.svg`)
+      );
+    };
+
+    ['google', 'facebook', 'crown-outline']
+      .forEach(add);
+
   }
 
   ngOnInit(): void {
@@ -38,11 +53,12 @@ export class AppComponent implements OnInit, OnDestroy {
           switch (authStatus) {
             case AuthStatus.AUTHENTICATED: {
               this.showLoadingLoginBar = false;
-              this.isLoggedIn = true;
+              this.showLoginStuff = true;
               return fromPromise(this.router.navigateByUrl('home'));
             }
             case AuthStatus.UNAUTHENTICATED: {
               this.showLoadingLoginBar = false;
+              this.showLoginStuff = false;
               return fromPromise(this.router.navigateByUrl('login'));
             }
             case AuthStatus.STARTING_AUTH_FLOW: {

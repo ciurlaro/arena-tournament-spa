@@ -1,5 +1,5 @@
 import {Component, Input, OnInit} from '@angular/core';
-import {SearchTournamentFlowService} from "../services/search-tournament-flow.service";
+import {SearchTournamentFlowService} from '../services/search-tournament-flow.service';
 
 @Component({
   selector: 'app-navbar',
