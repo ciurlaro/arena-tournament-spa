@@ -5,7 +5,7 @@ import {UserEntity} from '../../domain/entities/user-entity';
 import {FirebaseAuthDatasource} from '../datasources/firebase-auth-datasource';
 import {FirebaseStorageDatasource} from '../datasources/firebase-storage-datasource';
 import {flatMap, map, toArray} from 'rxjs/operators';
-import {AuthUserEntity, storageImagePathFor} from '../entities/auth-user-entity';
+import {storageImagePathFor} from '../entities/auth-user-entity';
 import {ArenaTournamentRepository} from '../../domain/repositories/arena-tournament-repository';
 import {GameEntity} from '../../domain/entities/game-entity';
 import {TournamentEntity} from '../../domain/entities/tournament-entity';
@@ -31,6 +31,7 @@ import {fromArray} from 'rxjs/internal/observable/fromArray';
 import {TournamentJSON} from '../rawresponses/single/tournament-json';
 import {RegistrationJSON} from '../rawresponses/single/registration-json';
 import {Claims} from '../rawresponses/claims';
+import {User} from 'firebase';
 
 @Injectable({
   providedIn: 'root',
@@ -120,13 +121,18 @@ export class ArenaTournamentRepositoryImplementation extends ArenaTournamentRepo
   getCurrentUser(): Observable<UserEntity | null> {
     return this.firebaseAuthDs.getCurrentAuthUser().pipe(
       flatMap((authUser) => {
-        return authUser ? zip(this.firebaseStorageDs.getFileUrl(storageImagePathFor(authUser)), this.firebaseAuthDs.getCurrentUserClaims())
-          .pipe(map(([userProfileImageUrl, claims]) => buildUserEntity(userProfileImageUrl, claims, authUser))) : of<UserEntity>(null);
+        return authUser ? zip(
+          authUser.photoURL && authUser.photoURL.startsWith('http') ?
+            of(authUser.photoURL) : this.firebaseStorageDs.getFileUrl(storageImagePathFor(authUser)),
+          this.firebaseAuthDs.getCurrentUserClaims())
+          .pipe(
+            map(([userProfileImageUrl, claims]) => buildUserEntity(userProfileImageUrl, claims, authUser))
+          ) : of<UserEntity>(null);
       })
     );
 
-    function buildUserEntity(userProfileImageUrl: string, claims: Claims, authUser: AuthUserEntity): UserEntity {
-      return new UserEntity(authUser.id, authUser.email, authUser.nickname, claims.isSubscriber, userProfileImageUrl);
+    function buildUserEntity(userProfileImageUrl: string, claims: Claims, authUser: User): UserEntity {
+      return new UserEntity(authUser.uid, authUser.email, authUser.displayName, claims.isSubscriber, userProfileImageUrl);
     }
   }
 

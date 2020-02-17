@@ -8,7 +8,9 @@ import {ArenaTournamentRepository} from '../../repositories/arena-tournament-rep
 })
 export class LoginWithGoogleUseCase implements UseCase<boolean> {
 
-  constructor(private repo: ArenaTournamentRepository) {
+  constructor(
+    private repo: ArenaTournamentRepository
+  ) {
   }
 
   buildAction(): Observable<boolean> {

@@ -1,7 +1,6 @@
 import {AuthStatus, FirebaseAuthDatasource} from '../../data/datasources/firebase-auth-datasource';
 import {Observable, of, Subject} from 'rxjs';
 import {AuthProviders} from '../../domain/entities/auth-providers';
-import {AuthUserEntity} from '../../data/entities/auth-user-entity';
 import {AngularFireAuth} from '@angular/fire/auth';
 import {catchError, first, flatMap, map} from 'rxjs/operators';
 import {fromPromise} from 'rxjs/internal-compatibility';
@@ -41,32 +40,16 @@ export class FirebaseAuthDatasourceImplementation extends FirebaseAuthDatasource
               return AuthProviders.GOOGLE;
             case FacebookAuthProvider.FACEBOOK_SIGN_IN_METHOD:
               return AuthProviders.FACEBOOK;
-            case EmailAuthProvider.EMAIL_LINK_SIGN_IN_METHOD:
+            case EmailAuthProvider.EMAIL_PASSWORD_SIGN_IN_METHOD:
               return AuthProviders.EMAIL_PASSWORD;
           }
         });
       }));
   }
 
-  getCurrentAuthUser(): Observable<AuthUserEntity | null> {
+  getCurrentAuthUser(): Observable<User | null> {
     return this.firebaseAuth.authState
-      .pipe(
-        first(),
-        map(value => {
-          return value;
-        }),
-        map((user) => {
-          if (user) {
-            return {
-              nickname: user.displayName,
-              id: user.uid,
-              email: user.email
-            };
-          } else {
-            return null;
-          }
-        })
-      );
+      .pipe(first());
   }
 
   getCurrentUserAuthMethods(): Observable<AuthProviders[]> {
@@ -131,6 +114,7 @@ export class FirebaseAuthDatasourceImplementation extends FirebaseAuthDatasource
   }
 
   loginWithEmailPassword(email: string, password: string): Observable<boolean> {
+    this.authSubject.next(AuthStatus.STARTING_AUTH_FLOW);
     return fromPromise(this.firebaseAuth.setPersistence(firebase.auth.Auth.Persistence.LOCAL)).pipe(
       flatMap(() => fromPromise(this.firebaseAuth.signInWithEmailAndPassword(email, password))),
       map((_) => true),
@@ -155,6 +139,7 @@ export class FirebaseAuthDatasourceImplementation extends FirebaseAuthDatasource
   }
 
   loginWithFacebookToken(token: string): Observable<boolean> {
+    this.authSubject.next(AuthStatus.STARTING_AUTH_FLOW);
     return fromPromise(this.firebaseAuth.signInWithCredential(FacebookAuthProvider.credential(token))).pipe(
       map((_) => true),
       catchError((err) => {
@@ -167,7 +152,11 @@ export class FirebaseAuthDatasourceImplementation extends FirebaseAuthDatasource
 
   logout(): Observable<boolean> {
     return fromPromise(this.firebaseAuth.signOut()).pipe(
-      map(_ => true)
+      map(_ => true),
+      catchError(err => {
+        console.error(err);
+        return of(false);
+      })
     );
   }
 

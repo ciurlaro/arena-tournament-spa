@@ -2,7 +2,7 @@ import {Component, OnDestroy} from '@angular/core';
 import {FormBuilder, FormControl, FormGroup, Validators} from '@angular/forms';
 import {LoginWithEmailPasswordUseCase} from '../domain/usecases/login/login-with-email-password-use-case';
 import {Subscription} from 'rxjs';
-import {ArenaTournamentFieldsMatcher} from "./arena-tournament-fields-matcher";
+import {ArenaTournamentFieldsMatcher} from './arena-tournament-fields-matcher';
 
 @Component({
   selector: 'app-login',

@@ -1,3 +1,3 @@
 export enum AuthProviders {
-  GOOGLE, FACEBOOK, EMAIL_PASSWORD
+  GOOGLE = 'Google', FACEBOOK = 'Facebook', EMAIL_PASSWORD = 'Email'
 }

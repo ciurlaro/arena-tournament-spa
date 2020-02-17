@@ -21,7 +21,7 @@ import {ArenaTournamentRepository} from '../../domain/repositories/arena-tournam
 export class ProfileComponent implements OnInit, OnDestroy {
 
   currentUser: UserEntity = null;
-  currentUserAuthProviders: AuthProviders[] = [];
+  currentUserAuthProviders: AuthProviders[] | string[] = [];
   private subs: Subscription[] = [];
 
   constructor(
@@ -34,39 +34,50 @@ export class ProfileComponent implements OnInit, OnDestroy {
     private linkWithEmailProviderUseCase: LinkWithEmailProviderUseCase,
     private repo: ArenaTournamentRepository
   ) {
-
   }
 
-  startLinkFLow(provider: `Google` | `Facebook` | 'Email') {
+  startLinkFLow(provider: AuthProviders | string) {
     const messageFun = (isLoginSuccessful: boolean) => {
       return isLoginSuccessful
         ? `Successfully linked with ${provider} account, now you can login with it`
         : `Some error occurred. Try again.`;
     };
 
+    // @ts-ignore
+    if (this.currentUserAuthProviders.includes(provider)) {
+      this.snackBar.open(`Provider already linked!`);
+      return;
+    }
+
     switch (provider) {
-      case 'Facebook': {
+      case AuthProviders.FACEBOOK: {
         this.subs.push(
           this.facebookOAuthService.loginAndGetToken()
             .pipe(
               flatMap((token) => this.linkWithFacebookProviderUseCase.buildAction(token)),
-              flatMap((isLoginSuccessful: boolean) => this.snackBar.open(messageFun(isLoginSuccessful)).afterDismissed())
+              flatMap((isLoginSuccessful: boolean) => {
+                this.currentUserAuthProviders.push(AuthProviders.FACEBOOK);
+                return this.snackBar.open(messageFun(isLoginSuccessful)).afterDismissed();
+              })
             )
             .subscribe()
         );
         break;
       }
-      case 'Google': {
+      case AuthProviders.GOOGLE: {
         this.subs.push(
           this.linkWithGoogleProviderUseCase.buildAction()
             .pipe(
-              flatMap((isLoginSuccessful: boolean) => this.snackBar.open(messageFun(isLoginSuccessful)).afterDismissed())
+              flatMap((isLoginSuccessful: boolean) => {
+                this.currentUserAuthProviders.push(AuthProviders.GOOGLE);
+                return this.snackBar.open(messageFun(isLoginSuccessful)).afterDismissed();
+              })
             )
             .subscribe()
         );
         break;
       }
-      case 'Email': {
+      case AuthProviders.EMAIL_PASSWORD: {
         this.subs.push(
           (this.dialog.open(ChoosePasswordComponent, {width: '250px'})
             .afterClosed() as Observable<string | undefined>)
@@ -78,7 +89,10 @@ export class ProfileComponent implements OnInit, OnDestroy {
                   return of(false);
                 }
               }),
-              flatMap((isLoginSuccessful: boolean) => this.snackBar.open(messageFun(isLoginSuccessful)).afterDismissed())
+              flatMap((isLoginSuccessful: boolean) => {
+                this.currentUserAuthProviders.push(AuthProviders.EMAIL_PASSWORD);
+                return this.snackBar.open(messageFun(isLoginSuccessful)).afterDismissed();
+              })
             )
             .subscribe()
         );

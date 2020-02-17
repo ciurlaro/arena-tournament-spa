@@ -1,24 +1,14 @@
-<!--Navbar-->
-<mat-toolbar class="navbar navbar-expand-lg">
+<mat-toolbar class="navbar" color="primary">
+  <span [routerLink]="'home'">Arena Tournament</span>
 
-  <!-- Navbar brand -->
-  <a class="navbar-brand">ArenaTournament</a>
+  <mat-icon *ngIf="isLoggedIn" [routerLink]="'profile'" class="toolbar-icon">person</mat-icon>
+  <mat-icon (click)="logout()" *ngIf="isLoggedIn" class="toolbar-icon">exit_to_app</mat-icon>
 
-  <!-- Links -->
-  <ul class="navbar-nav mr-auto">
-    <li class="nav-item" [routerLink]="'home'">
-      <a class="nav-link">Home</a>
-    </li>
-    <li class="nav-item" [routerLink]="'profile'">
-      <a class="nav-link">Profile</a>
-    </li>
-    <li class="nav-item">
-      <a class="nav-link">History</a>
-    </li>
-  </ul>
+  <span class="spacer"></span>
 
   <mat-form-field *ngIf="isLoggedIn" appearance="standard" color="accent" class="search-field">
     <mat-label class="nav-item">Search tournament</mat-label>
+    <!--suppress TypeScriptUnresolvedVariable -->
     <input (input)="onSearchTournamentTextChanged($event.target.value)" matInput>
   </mat-form-field>
 

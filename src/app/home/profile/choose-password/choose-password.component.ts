@@ -1,27 +1,58 @@
-import {Component, OnDestroy, OnInit} from '@angular/core';
+import {Component} from '@angular/core';
 import {MatDialogRef} from '@angular/material/dialog';
+import {
+  AbstractControl,
+  FormBuilder,
+  FormControl,
+  FormGroup,
+  FormGroupDirective,
+  NgForm,
+  ValidationErrors,
+  Validators
+} from '@angular/forms';
+import {ErrorStateMatcher} from '@angular/material/core';
+import {PasswordValidators} from 'ngx-validators';
 
 @Component({
   selector: 'app-choose-password',
   templateUrl: './choose-password.component.html',
   styleUrls: ['./choose-password.component.scss']
 })
-export class ChoosePasswordComponent implements OnInit, OnDestroy {
+export class ChoosePasswordComponent {
 
   hide = true;
-  password = '';
-  confirmPassword = '';
+  formGroup: FormGroup;
+  passwordControl = new FormControl('', [
+    Validators.required,
+    Validators.minLength(6)
+  ]);
+  confirmPasswordControl = new FormControl();
+  matcher = new ChoosePasswordErrorStateMatcher();
 
   constructor(
-    public dialogRef: MatDialogRef<ChoosePasswordComponent>
+    public dialogRef: MatDialogRef<ChoosePasswordComponent>,
+    private formBuilder: FormBuilder,
   ) {
+
+    const passwordChecker = (group: AbstractControl): ValidationErrors | null => {
+      const pass = group.get('password').value;
+      const confirmPass = group.get('confirmPassword').value;
+      return pass === confirmPass ? null : {notSame: true};
+    };
+
+    this.formGroup = formBuilder.group({
+      password: this.passwordControl,
+      confirmPassword: this.confirmPasswordControl
+    }, {validators: PasswordValidators.mismatchedPasswords('password', 'confirmPassword')});
   }
 
-  ngOnInit(): void {
+  submit() {
+    this.dialogRef.close(this.formGroup.get('password').value);
   }
+}
 
-  ngOnDestroy(): void {
-    this.dialogRef.close(this.password);
+export class ChoosePasswordErrorStateMatcher implements ErrorStateMatcher {
+  isErrorState(control: FormControl | null, form: FormGroupDirective | NgForm | null): boolean {
+    return !!control.errors;
   }
-
 }

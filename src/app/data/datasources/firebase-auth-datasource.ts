@@ -1,7 +1,7 @@
 import {Observable} from 'rxjs';
 import {AuthProviders} from '../../domain/entities/auth-providers';
-import {AuthUserEntity} from '../entities/auth-user-entity';
 import {Claims} from '../rawresponses/claims';
+import {User} from 'firebase';
 
 export abstract class FirebaseAuthDatasource {
 
@@ -43,7 +43,7 @@ export abstract class FirebaseAuthDatasource {
 
   abstract getToken(): Observable<string>;
 
-  abstract getCurrentAuthUser(): Observable<AuthUserEntity | null>;
+  abstract getCurrentAuthUser(): Observable<User | null>;
 
   abstract getCurrentUserClaims(): Observable<Claims>;
 

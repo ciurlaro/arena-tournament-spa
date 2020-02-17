@@ -5,12 +5,17 @@
 }
 
 .navbar {
-  color: whitesmoke;
-  background-color: #673ab7;
   height: 100px;
 }
 
-
 .search-field {
   margin-left: 32px;
+}
+
+.spacer {
+  flex: 1 1 auto;
+}
+
+.toolbar-icon {
+  margin: 0 16px;
 }

@@ -26,13 +26,13 @@
     <p class="mat-subheading-2">{{currentUser.email}}</p>
   </div>
   <div *ngIf="currentUserAuthProviders.length != 0" class="d-flex justify-content-around">
-    <button (click)="startLinkFLow('Google')" [color]="'google-color'" class="margin-16px social-btn" mat-fab>
+    <button (click)="startLinkFLow('Google')" [color]="'google-color'" class="margin-16px" mat-fab>
       <mat-icon svgIcon="google"></mat-icon>
     </button>
-    <button (click)="startLinkFLow('Facebook')" [color]="'facebook-color'" class="margin-16px social-btn" mat-fab>
+    <button (click)="startLinkFLow('Facebook')" [color]="'facebook-color'" class="margin-16px" mat-fab>
       <mat-icon svgIcon="facebook"></mat-icon>
     </button>
-    <button (click)="startLinkFLow('Email')" [color]="'email-color'" class="margin-16px social-btn" mat-fab>
+    <button (click)="startLinkFLow('Email')" [color]="'email-color'" class="margin-16px" mat-fab>
       <mat-icon>email</mat-icon>
     </button>
   </div>

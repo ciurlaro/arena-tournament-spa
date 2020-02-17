@@ -8,6 +8,6 @@ import {Observable} from 'rxjs';
 export class LinkWithFacebookProviderUseCase extends RepoUseCaseWithParams<string, boolean> {
 
   buildAction(token: string): Observable<boolean> {
-    return this.repo.loginWithFacebookToken(token);
+    return this.repo.linkFacebookProvider(token);
   }
 }
