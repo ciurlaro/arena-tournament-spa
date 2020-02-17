@@ -1,0 +1,28 @@
+<div class="modal-header">
+  <form style="width: 100%"
+        (ngSubmit)="createTournamentSubmit(title.value, maxParticipants.value, game.value, description.value)">
+    <div class="form-group">
+      <label for="form-tournament-title">Title</label>
+      <input type="text" class="form-control" id="form-tournament-title" #title required>
+    </div>
+    <div class="form-group">
+      <label for="form-tournament-game">Game</label>
+      <select class="form-control" id="form-tournament-game" #game>
+        <option *ngFor="let game of games" [value]="game">{{game}}</option>
+      </select>
+    </div>
+    <div class="form-group">
+      <label for="form-tournament-players-number">Maximum participants</label>
+      <select class="form-control" id="form-tournament-players-number" #maxParticipants>
+        <option *ngFor="let participant of participants" [value]="participant">{{participant}}</option>
+      </select>
+    </div>
+    <div class="form-group">
+      <label for="form-tournament-description">Description</label>
+      <textarea class="form-control" id="form-tournament-description" rows="3" #description required></textarea>
+    </div>
+    <div class="d-flex justify-content-end">
+      <button class="btn btn-outline-dark">Submit</button>
+    </div>
+  </form>
+</div>

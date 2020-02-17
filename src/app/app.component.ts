@@ -1,4 +1,4 @@
-import {Component, OnDestroy, OnInit} from '@angular/core';
+import {Component, Input, OnDestroy, OnInit} from '@angular/core';
 import {EMPTY, Observable, Subscription} from 'rxjs';
 import {SearchTournamentFlowService} from './services/search-tournament-flow.service';
 import {ArenaTournamentRepository} from './domain/repositories/arena-tournament-repository';
@@ -10,7 +10,6 @@ import {Router} from '@angular/router';
 import {AuthStatus} from './data/datasources/firebase-auth-datasource';
 import {flatMap} from 'rxjs/operators';
 import {fromPromise} from 'rxjs/internal-compatibility';
-import { ModalModule } from 'ngx-bootstrap';
 
 
 @Component({
@@ -60,10 +59,6 @@ export class AppComponent implements OnInit, OnDestroy {
   ngOnDestroy(): void {
     this.sub.unsubscribe();
     this.testSubs.forEach((sub) => sub.unsubscribe());
-  }
-
-  onSearchTournamentTextChanged(text: string) {
-    this.searchTournamentFlowService.publish(text);
   }
 
 

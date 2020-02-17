@@ -1,5 +1,5 @@
 import {BrowserModule} from '@angular/platform-browser';
-import {NgModule, Provider} from '@angular/core';
+import {NgModule, Provider, Component, Input} from '@angular/core';
 
 import {AppRoutingModule} from './app-routing.module';
 import {AppComponent} from './app.component';
@@ -38,7 +38,9 @@ import {NgbModule} from '@ng-bootstrap/ng-bootstrap';
 import {SnackbarComponent} from './snackbar/snackbar.component';
 import {MatSnackBarModule} from '@angular/material/snack-bar';
 import {MatProgressBarModule} from '@angular/material/progress-bar';
-import {CreateTournamentComponent} from './home/profile/create-tournament/create-tournament.component';
+import {CreateTournamentFormComponent} from './home/profile/create-tournament/create-tournament-form/create-tournament-form.component';
+import { CreateTournamentButtonComponent } from './home/profile/create-tournament/create-tournament-button/create-tournament-button.component';
+import { NavbarComponent } from './navbar/navbar.component';
 
 
 function providersBuilder(action: (providers: Provider[]) => void): Provider[] {
@@ -56,7 +58,9 @@ function providersBuilder(action: (providers: Provider[]) => void): Provider[] {
     TournamentCardComponent,
     ProfileComponent,
     SnackbarComponent,
-    CreateTournamentComponent
+    CreateTournamentFormComponent,
+    CreateTournamentButtonComponent,
+    NavbarComponent
   ],
   imports: [
     NgbModule,
