@@ -14,7 +14,7 @@
 
 <div *ngIf="currentUser != null" class="profile-container">
   <div class="d-flex justify-content-center">
-    <mat-icon color="warn" svgIcon="crown-outline"></mat-icon>
+    <mat-icon color="warn" svgIcon="crown-outline" class="crown"></mat-icon>
   </div>
   <div class="d-flex justify-content-center">
     <img [src]="currentUser.image" class="user-image">
@@ -26,13 +26,13 @@
     <p class="mat-subheading-2">{{currentUser.email}}</p>
   </div>
   <div *ngIf="currentUserAuthProviders.length != 0" class="d-flex justify-content-around">
-    <button (click)="startLinkFLow('Google')" [color]="'google-color'" class="margin-right-32px" mat-fab>
+    <button (click)="startLinkFLow('Google')" [color]="'google-color'" class="margin-16px social-btn" mat-fab>
       <mat-icon svgIcon="google"></mat-icon>
     </button>
-    <button (click)="startLinkFLow('Facebook')" [color]="'facebook-color'" class="margin-right-32px" mat-fab>
+    <button (click)="startLinkFLow('Facebook')" [color]="'facebook-color'" class="margin-16px social-btn" mat-fab>
       <mat-icon svgIcon="facebook"></mat-icon>
     </button>
-    <button (click)="startLinkFLow('Email')" [color]="'email-color'" [disabled]="" mat-fab>
+    <button (click)="startLinkFLow('Email')" [color]="'email-color'" class="margin-16px social-btn" mat-fab>
       <mat-icon>email</mat-icon>
     </button>
   </div>

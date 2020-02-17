@@ -84,8 +84,8 @@ export class ArenaTournamentRepositoryImplementation extends ArenaTournamentRepo
     return this.firebaseAuthDs.linkFacebookAuthProvider(token);
   }
 
-  linkGoogleAuthProvider(token: string): Observable<boolean> {
-    return this.firebaseAuthDs.linkGoogleAuthProvider(token);
+  linkGoogleAuthProvider(): Observable<boolean> {
+    return this.firebaseAuthDs.linkGoogleAuthProviderWithPopup();
   }
 
   linkPasswordAuthProvider(password: string): Observable<boolean> {

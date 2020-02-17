@@ -1,8 +1,8 @@
 import {Component, OnDestroy} from '@angular/core';
-import {FormBuilder, FormControl, FormGroup, FormGroupDirective, NgForm, Validators} from '@angular/forms';
-import {ErrorStateMatcher} from '@angular/material/core';
+import {FormBuilder, FormControl, FormGroup, Validators} from '@angular/forms';
 import {LoginWithEmailPasswordUseCase} from '../domain/usecases/login/login-with-email-password-use-case';
 import {Subscription} from 'rxjs';
+import {ArenaTournamentFieldsMatcher} from "./arena-tournament-fields-matcher";
 
 @Component({
   selector: 'app-login',
@@ -22,7 +22,7 @@ export class LoginComponent implements OnDestroy {
     Validators.required,
     Validators.minLength(6)
   ]);
-  matcher = new FieldsMatcher();
+  matcher = new ArenaTournamentFieldsMatcher();
   private loginSub: Subscription;
 
   constructor(
@@ -56,15 +56,6 @@ export class LoginComponent implements OnDestroy {
       this.loginSub.unsubscribe();
     }
   }
-}
-
-
-export class FieldsMatcher implements ErrorStateMatcher {
-  isErrorState(control: FormControl | null, form: FormGroupDirective | NgForm | null): boolean {
-    const isSubmitted = form && form.submitted;
-    return !!(control && control.invalid && (control.dirty || control.touched || isSubmitted));
-  }
-
 }
 
 

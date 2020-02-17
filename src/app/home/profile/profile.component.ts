@@ -39,8 +39,11 @@ export class ProfileComponent implements OnInit, OnDestroy {
 
   startLinkFLow(provider: `Google` | `Facebook` | 'Email') {
     const messageFun = (isLoginSuccessful: boolean) => {
-      return isLoginSuccessful ? `Successfully linked ${provider}, now you can login with it` : `Some error occurred. Try again.`;
+      return isLoginSuccessful
+        ? `Successfully linked with ${provider} account, now you can login with it`
+        : `Some error occurred. Try again.`;
     };
+
     switch (provider) {
       case 'Facebook': {
         this.subs.push(
@@ -65,9 +68,7 @@ export class ProfileComponent implements OnInit, OnDestroy {
       }
       case 'Email': {
         this.subs.push(
-          (this.dialog.open(ChoosePasswordComponent, {
-            width: '250px'
-          })
+          (this.dialog.open(ChoosePasswordComponent, {width: '250px'})
             .afterClosed() as Observable<string | undefined>)
             .pipe(
               flatMap((password) => {

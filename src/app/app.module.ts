@@ -39,10 +39,10 @@ import {SnackbarComponent} from './snackbar/snackbar.component';
 import {MatSnackBarModule} from '@angular/material/snack-bar';
 import {MatProgressBarModule} from '@angular/material/progress-bar';
 import {CreateTournamentFormComponent} from './home/profile/create-tournament/create-tournament-form/create-tournament-form.component';
-// tslint:disable-next-line:max-line-length
 import {CreateTournamentButtonComponent} from './home/profile/create-tournament/create-tournament-button/create-tournament-button.component';
 import {NavbarComponent} from './navbar/navbar.component';
 import {ChoosePasswordComponent} from './home/profile/choose-password/choose-password.component';
+import { MatDialogModule } from '@angular/material/dialog';
 
 
 function providersBuilder(action: (providers: Provider[]) => void): Provider[] {
@@ -81,7 +81,8 @@ function providersBuilder(action: (providers: Provider[]) => void): Provider[] {
     MatCardModule,
     HttpClientModule,
     MatSnackBarModule,
-    MatProgressBarModule
+    MatProgressBarModule,
+    MatDialogModule
   ],
   providers: providersBuilder(providers => {
     providers.push({provide: ArenaTournamentRepository, useClass: ArenaTournamentRepositoryImplementation});

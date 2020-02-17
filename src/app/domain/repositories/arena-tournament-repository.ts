@@ -84,7 +84,7 @@ export abstract class ArenaTournamentRepository {
 
   abstract getAuthMethodsForEmail(email: string): Observable<AuthProviders[]>;
 
-  abstract linkGoogleAuthProvider(token: string): Observable<boolean>;
+  abstract linkGoogleAuthProvider(): Observable<boolean>;
 
   abstract linkFacebookProvider(token: string): Observable<boolean>;
 

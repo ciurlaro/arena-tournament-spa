@@ -1,4 +1,4 @@
-import {Component, OnInit} from '@angular/core';
+import {Component, OnDestroy, OnInit} from '@angular/core';
 import {MatDialogRef} from '@angular/material/dialog';
 
 @Component({
@@ -6,18 +6,21 @@ import {MatDialogRef} from '@angular/material/dialog';
   templateUrl: './choose-password.component.html',
   styleUrls: ['./choose-password.component.scss']
 })
-export class ChoosePasswordComponent implements OnInit {
+export class ChoosePasswordComponent implements OnInit, OnDestroy {
 
   hide = true;
   password = '';
   confirmPassword = '';
 
   constructor(
-    private dialogRef: MatDialogRef<ChoosePasswordComponent>
+    public dialogRef: MatDialogRef<ChoosePasswordComponent>
   ) {
   }
 
   ngOnInit(): void {
+  }
+
+  ngOnDestroy(): void {
     this.dialogRef.close(this.password);
   }
 
