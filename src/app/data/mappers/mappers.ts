@@ -40,7 +40,7 @@ interface MultipleToRemoteMapper<MultipleRemote, SingleRemote, Entity> extends S
 })
 export class GameMapper implements MultipleFromRemoteMapper<MultipleGamesJSON, GameJSON, GameEntity> {
   fromRemoteSingle(remote: GameJSON): GameEntity {
-    return new GameEntity(remote.gameName, remote.availableModes, remote.image, remote.icon);
+    return new GameEntity(remote.gameName, remote.availableModes, remote.image, remote.icon, remote.icon_svg);
   }
 
   fromRemoteMultiple(remote: MultipleGamesJSON): GameEntity[] {

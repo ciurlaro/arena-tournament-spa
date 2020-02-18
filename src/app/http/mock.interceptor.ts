@@ -11,7 +11,7 @@ export class MockInterceptor implements HttpInterceptor {
 
   intercept(request: HttpRequest<unknown>, next: HttpHandler): Observable<HttpEvent<unknown>> {
     try {
-      const cose = this.urlBuilderService.buildUrl(
+      const builtUrlData = this.urlBuilderService.buildUrl(
         `/mock/${this.handleMockResponse(request)}.json`,
         (_) => {
         },
@@ -20,9 +20,10 @@ export class MockInterceptor implements HttpInterceptor {
         }
       );
       return next.handle(request.clone({
-        headers: cose.headers,
-        url: cose.path,
-        params: cose.params
+        method: 'GET',
+        headers: builtUrlData.headers,
+        url: builtUrlData.path,
+        params: builtUrlData.params
       }));
     } catch (e) {
       console.error(e);

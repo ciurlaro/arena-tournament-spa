@@ -45,7 +45,9 @@ export class ProfileComponent implements OnInit, OnDestroy {
 
     // @ts-ignore
     if (this.currentUserAuthProviders.includes(provider)) {
-      this.snackBar.open(`Provider already linked!`);
+      this.snackBar.open(`Provider already linked!`, 'Dismiss', {
+        duration: 2000
+      });
       return;
     }
 
@@ -57,7 +59,9 @@ export class ProfileComponent implements OnInit, OnDestroy {
               flatMap((token) => this.linkWithFacebookProviderUseCase.buildAction(token)),
               flatMap((isLoginSuccessful: boolean) => {
                 this.currentUserAuthProviders.push(AuthProviders.FACEBOOK);
-                return this.snackBar.open(messageFun(isLoginSuccessful)).afterDismissed();
+                return this.snackBar.open(messageFun(isLoginSuccessful), 'Dismiss', {
+                  duration: 2000
+                }).afterDismissed();
               })
             )
             .subscribe()
@@ -70,7 +74,9 @@ export class ProfileComponent implements OnInit, OnDestroy {
             .pipe(
               flatMap((isLoginSuccessful: boolean) => {
                 this.currentUserAuthProviders.push(AuthProviders.GOOGLE);
-                return this.snackBar.open(messageFun(isLoginSuccessful)).afterDismissed();
+                return this.snackBar.open(messageFun(isLoginSuccessful), 'Dismiss', {
+                  duration: 2000
+                }).afterDismissed();
               })
             )
             .subscribe()
@@ -91,7 +97,9 @@ export class ProfileComponent implements OnInit, OnDestroy {
               }),
               flatMap((isLoginSuccessful: boolean) => {
                 this.currentUserAuthProviders.push(AuthProviders.EMAIL_PASSWORD);
-                return this.snackBar.open(messageFun(isLoginSuccessful)).afterDismissed();
+                return this.snackBar.open(messageFun(isLoginSuccessful), 'Dismiss', {
+                  duration: 2000
+                }).afterDismissed();
               })
             )
             .subscribe()

@@ -38,11 +38,12 @@ import {NgbModule} from '@ng-bootstrap/ng-bootstrap';
 import {SnackbarComponent} from './snackbar/snackbar.component';
 import {MatSnackBarModule} from '@angular/material/snack-bar';
 import {MatProgressBarModule} from '@angular/material/progress-bar';
-import {CreateTournamentFormComponent} from './home/profile/create-tournament/create-tournament-form/create-tournament-form.component';
-import {CreateTournamentButtonComponent} from './home/profile/create-tournament/create-tournament-button/create-tournament-button.component';
 import {NavbarComponent} from './navbar/navbar.component';
 import {ChoosePasswordComponent} from './home/profile/choose-password/choose-password.component';
-import { MatDialogModule } from '@angular/material/dialog';
+import {MatDialogModule} from '@angular/material/dialog';
+import {CreateTournamentComponent} from './home/create-tournament/create-tournament.component';
+import {MatSelectModule} from '@angular/material/select';
+import {TournamentDetailComponent} from './home/tournament-detail/tournament-detail.component';
 
 
 function providersBuilder(action: (providers: Provider[]) => void): Provider[] {
@@ -60,10 +61,10 @@ function providersBuilder(action: (providers: Provider[]) => void): Provider[] {
     TournamentCardComponent,
     ProfileComponent,
     SnackbarComponent,
-    CreateTournamentFormComponent,
-    CreateTournamentButtonComponent,
     NavbarComponent,
-    ChoosePasswordComponent
+    ChoosePasswordComponent,
+    CreateTournamentComponent,
+    TournamentDetailComponent
   ],
   imports: [
     NgbModule,
@@ -82,7 +83,8 @@ function providersBuilder(action: (providers: Provider[]) => void): Provider[] {
     HttpClientModule,
     MatSnackBarModule,
     MatProgressBarModule,
-    MatDialogModule
+    MatDialogModule,
+    MatSelectModule
   ],
   providers: providersBuilder(providers => {
     providers.push({provide: ArenaTournamentRepository, useClass: ArenaTournamentRepositoryImplementation});

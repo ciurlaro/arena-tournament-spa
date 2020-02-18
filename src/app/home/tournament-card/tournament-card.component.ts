@@ -10,6 +10,7 @@ export class TournamentCardComponent {
 
   @Input()
   tournament: TournamentEntity;
+  hoover = '';
 
   constructor() {
   }

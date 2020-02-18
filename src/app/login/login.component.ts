@@ -3,6 +3,9 @@ import {FormBuilder, FormControl, FormGroup, Validators} from '@angular/forms';
 import {LoginWithEmailPasswordUseCase} from '../domain/usecases/login/login-with-email-password-use-case';
 import {Subscription} from 'rxjs';
 import {ArenaTournamentFieldsMatcher} from './arena-tournament-fields-matcher';
+import {flatMap} from 'rxjs/operators';
+import {Router} from '@angular/router';
+import {MatSnackBar} from '@angular/material/snack-bar';
 
 @Component({
   selector: 'app-login',
@@ -27,7 +30,9 @@ export class LoginComponent implements OnDestroy {
 
   constructor(
     private formBuilder: FormBuilder,
-    private loginWithEmailPasswordUseCase: LoginWithEmailPasswordUseCase
+    private loginWithEmailPasswordUseCase: LoginWithEmailPasswordUseCase,
+    private router: Router,
+    private snackBar: MatSnackBar
   ) {
     this.loginFormGroup = this.formBuilder.group({
       email: this.emailFormControl,
@@ -37,18 +42,23 @@ export class LoginComponent implements OnDestroy {
 
   onSubmit(data) {
     this.loginSub = this.loginWithEmailPasswordUseCase.buildAction(data)
+      .pipe(
+        flatMap(isLoginSuccessful => {
+          if (isLoginSuccessful) {
+            return this.router.navigateByUrl('home');
+          } else {
+            return this.snackBar.open('Something went wrong! Try again.', 'Dismiss', {
+              duration: 2000
+            }).afterDismissed();
+          }
+        })
+      )
       .subscribe();
   }
 
   getPasswordError(): string {
     return this.passwordFormControl.hasError('required') ? 'You must enter a value' :
       this.passwordFormControl.hasError('minlength') ? `At least 6 chars` : '';
-  }
-
-  getEmailError(): string {
-    return this.emailFormControl.hasError('required') ? 'You must enter a value' :
-      this.emailFormControl.hasError('email') ? 'Not a valid email' :
-        '';
   }
 
   ngOnDestroy(): void {

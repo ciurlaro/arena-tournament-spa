@@ -12,7 +12,7 @@ import {flatMap} from 'rxjs/operators';
 import {fromPromise} from 'rxjs/internal-compatibility';
 import {MatIconRegistry} from '@angular/material/icon';
 import {DomSanitizer} from '@angular/platform-browser';
-
+import {GetAllGamesUseCase} from './domain/usecases/games/get-all-games-use-case.service';
 
 @Component({
   selector: 'app-root',
@@ -31,18 +31,24 @@ export class AppComponent implements OnInit, OnDestroy {
     private repository: ArenaTournamentRepository,
     private router: Router,
     private matIconRegistry: MatIconRegistry,
-    private domSanitizer: DomSanitizer
+    private domSanitizer: DomSanitizer,
+    getAllGamesUseCase: GetAllGamesUseCase
   ) {
 
-    const add = (iconName: string) => {
+    const add = (iconName: string, iconUrl?: string) => {
       matIconRegistry.addSvgIcon(
         iconName,
-        domSanitizer.bypassSecurityTrustResourceUrl(`assets/icons/${iconName}.svg`)
+        domSanitizer.bypassSecurityTrustResourceUrl(
+          iconUrl ? iconUrl : `assets/icons/${iconName}.svg`
+        )
       );
     };
 
     ['google', 'facebook', 'crown-outline']
-      .forEach(add);
+      .forEach(value => add(value));
+
+    getAllGamesUseCase.buildAction()
+      .subscribe((games) => games.forEach(game => add(game.name, game.iconSvg)));
 
   }
 
@@ -54,7 +60,7 @@ export class AppComponent implements OnInit, OnDestroy {
             case AuthStatus.AUTHENTICATED: {
               this.showLoadingLoginBar = false;
               this.showLoginStuff = true;
-              return fromPromise(this.router.navigateByUrl('home'));
+              return EMPTY;
             }
             case AuthStatus.UNAUTHENTICATED: {
               this.showLoadingLoginBar = false;
@@ -98,7 +104,7 @@ export class AppComponent implements OnInit, OnDestroy {
 
     const user: UserEntity = new UserEntity('user_nick', email, nickname, isSubscriber, image.toString());
     const admin: UserEntity = new UserEntity('admin_nick', email, nickname, isSubscriber, image.toString());
-    const game: GameEntity = new GameEntity(gameName, availableModes, image.toString(), icon);
+    const game: GameEntity = new GameEntity(gameName, availableModes, image.toString(), icon, icon);
     const tournament: TournamentEntity = new TournamentEntity(id, playersNumber, title, description, modeName, admin, game);
     const registration: RegistrationEntity = new RegistrationEntity(user, tournament, game, 69);
 

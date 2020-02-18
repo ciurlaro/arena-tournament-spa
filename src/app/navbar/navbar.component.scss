@@ -5,7 +5,10 @@
 }
 
 .navbar {
+  position: sticky;
+  top: 0;
   height: 100px;
+  z-index: 1000;
 }
 
 .search-field {
@@ -18,4 +21,8 @@
 
 .toolbar-icon {
   margin: 0 16px;
+}
+
+.cursor-pointer {
+  cursor: pointer;
 }

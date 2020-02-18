@@ -12,9 +12,10 @@
 <!--  </mat-card-footer>-->
 <!--</mat-card>-->
 
+<!--suppress HtmlRequiredAltAttribute, AngularInvalidExpressionResultType -->
 <div *ngIf="currentUser != null" class="profile-container">
   <div class="d-flex justify-content-center">
-    <mat-icon color="warn" svgIcon="crown-outline" class="crown"></mat-icon>
+    <mat-icon *ngIf="currentUser.isSubscriber" class="crown" color="warn" svgIcon="crown-outline"></mat-icon>
   </div>
   <div class="d-flex justify-content-center">
     <img [src]="currentUser.image" class="user-image">

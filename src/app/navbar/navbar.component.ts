@@ -3,6 +3,10 @@ import {SearchTournamentFlowService} from '../services/search-tournament-flow.se
 import {ArenaTournamentRepository} from '../domain/repositories/arena-tournament-repository';
 import {flatMap} from 'rxjs/operators';
 import {Router} from '@angular/router';
+import {IsCurrentUserSubscriberUseCase} from '../domain/usecases/user/is-current-user-subscriber-use-case.service';
+import {EMPTY, Subscription} from 'rxjs';
+import {MatDialog} from '@angular/material/dialog';
+import {CreateTournamentComponent} from '../home/create-tournament/create-tournament.component';
 
 @Component({
   selector: 'app-navbar',
@@ -13,10 +17,15 @@ export class NavbarComponent implements OnInit {
 
   @Input() isLoggedIn;
 
+  isCurrentUserSubscriber = false;
+  private sub: Subscription;
+
   constructor(
     private searchTournamentFlowService: SearchTournamentFlowService,
     private repo: ArenaTournamentRepository,
-    private router: Router
+    private router: Router,
+    private isCurrentUserSubscriberUseCase: IsCurrentUserSubscriberUseCase,
+    private dialog: MatDialog
   ) {
   }
 
@@ -25,13 +34,24 @@ export class NavbarComponent implements OnInit {
   }
 
   ngOnInit(): void {
+    this.sub = this.isCurrentUserSubscriberUseCase.buildAction()
+      .subscribe((isCurrentUserSubscriber) => {
+        return this.isCurrentUserSubscriber = isCurrentUserSubscriber ? isCurrentUserSubscriber : false;
+      });
   }
 
   logout() {
+    this.sub.unsubscribe();
     this.repo.logout()
       .pipe(
-        flatMap((loggedOut) => this.router.navigateByUrl('login'))
+        flatMap((loggedOut) => loggedOut ? this.router.navigateByUrl('login') : EMPTY)
       )
       .subscribe();
+  }
+
+  createTournament() {
+    this.dialog.open(CreateTournamentComponent, {
+      width: '350px'
+    });
   }
 }
