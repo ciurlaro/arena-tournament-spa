@@ -12,7 +12,6 @@ export abstract class ArenaTournamentEndpoints {
 
   abstract createTournamentUrl(): Url;
 
-  abstract createUserUrl(): Url;
 
 
   /** Get endpoints  */

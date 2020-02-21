@@ -13,19 +13,21 @@ export class MockInterceptor implements HttpInterceptor {
     try {
       const builtUrlData = this.urlBuilderService.buildUrl(
         `/mock/${this.handleMockResponse(request)}.json`,
-        (_) => {
-        },
+        (_) => {},
         (headers) => {
           headers.append('Content-Type', 'application/json');
         }
       );
+      console.info(builtUrlData);
       return next.handle(request.clone({
         method: 'GET',
         headers: builtUrlData.headers,
         url: builtUrlData.path,
         params: builtUrlData.params
       }));
+
     } catch (e) {
+      console.error(request);
       console.error(e);
       return next.handle(request);
     }

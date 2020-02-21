@@ -30,11 +30,6 @@ export class ArenaTournamentEndpointsImplementation extends ArenaTournamentEndpo
     return this.urlBuilderService.buildUrl('tournament');
   }
 
-  createUserUrl(): Url {
-    return this.urlBuilderService.buildUrl('createUser');
-  }
-
-
   /** Get endpoints */
 
   allGamesUrl(page: number): Url {
@@ -44,13 +39,13 @@ export class ArenaTournamentEndpointsImplementation extends ArenaTournamentEndpo
   }
 
   allRegistrationsUrl(page: number): Url {
-    return this.urlBuilderService.buildUrl('/registration', (params) => {
+    return this.urlBuilderService.buildUrl('registration', (params) => {
       params.append('page', page.toString());
     });
   }
 
   allTournamentsUrl(page: number): Url {
-    return this.urlBuilderService.buildUrl('/tournament', (params) => {
+    return this.urlBuilderService.buildUrl('tournament', (params) => {
       params.append('page', page.toString());
     });
   }
@@ -60,7 +55,7 @@ export class ArenaTournamentEndpointsImplementation extends ArenaTournamentEndpo
   }
 
   gamesContainingNameUrl(gameName: string, page: number): Url {
-    return this.urlBuilderService.buildUrl('/game/search/containingGameName', (params) => {
+    return this.urlBuilderService.buildUrl('game/search/byGameNameContaining', (params) => {
       params.append('gameName', gameName);
       params.append('page', page.toString());
     });
@@ -80,7 +75,7 @@ export class ArenaTournamentEndpointsImplementation extends ArenaTournamentEndpo
   }
 
   getTournamentsContainingTitle(title: string, page: number): Url {
-    return this.urlBuilderService.buildUrl('/tournament/search/containingTitle', (params) => {
+    return this.urlBuilderService.buildUrl('byTitleContaining', (params) => {
       params.append('title', title);
       params.append('page', page.toString());
     });
@@ -95,18 +90,18 @@ export class ArenaTournamentEndpointsImplementation extends ArenaTournamentEndpo
   }
 
   registrationByIdUrl(id: number): Url {
-    return this.urlBuilderService.buildUrl(`/registration/${id}`);
+    return this.urlBuilderService.buildUrl(`registration/${id}`);
   }
 
   registrationsByTournamentUrl(tournamentId: number, page: number): Url {
-    return this.urlBuilderService.buildUrl('/registration/search/byTournamentId', (params) => {
+    return this.urlBuilderService.buildUrl('registration/search/byTournamentId', (params) => {
       params.append('tournamentId', tournamentId.toString());
       params.append('page', page.toString());
     });
   }
 
   registrationsByUserUrl(userId: string, page: number): Url {
-    return this.urlBuilderService.buildUrl('/registration/search/byUserId', (params) => {
+    return this.urlBuilderService.buildUrl('registration/search/byUserId', (params) => {
       params.append('userId', userId);
       params.append('page', page.toString());
     });
@@ -129,39 +124,39 @@ export class ArenaTournamentEndpointsImplementation extends ArenaTournamentEndpo
   }
 
   searchTournamentsByNameUrl(query: string, page: number): Url {
-    return this.urlBuilderService.buildUrl('/tournament/search/byName', (params) => {
+    return this.urlBuilderService.buildUrl('tournament/search/byName', (params) => {
       params.append('title', query);
       params.append('page', page.toString());
     });
   }
 
   tournamentByIdUrl(id: number): Url {
-    return this.urlBuilderService.buildUrl(`/tournament/${id}`);
+    return this.urlBuilderService.buildUrl(`tournament/${id}`);
   }
 
   tournamentsByAdmin(userId: string, page: number): Url {
-    return this.urlBuilderService.buildUrl('/tournament/search/byUserId', (params) => {
+    return this.urlBuilderService.buildUrl('tournament/search/byUserId', (params) => {
       params.append('admin', userId);
       params.append('page', page.toString());
     });
   }
 
   tournamentsByGameName(gameName: string, page: number): Url {
-    return this.urlBuilderService.buildUrl('/tournament/search/byGame', (params) => {
+    return this.urlBuilderService.buildUrl('tournament/search/byGame', (params) => {
       params.append('gameName', gameName);
       params.append('page', page.toString());
     });
   }
 
   tournamentsByModeUrl(mode: string, page: number): Url {
-    return this.urlBuilderService.buildUrl('/tournament/search/byMode', (params) => {
+    return this.urlBuilderService.buildUrl('tournament/search/byMode', (params) => {
       params.append('tournamentMode', mode);
       params.append('page', page.toString());
     });
   }
 
   userByIdUrl(userId: string): Url {
-    return this.urlBuilderService.buildUrl(`/user/${userId}`);
+    return this.urlBuilderService.buildUrl(`user/${userId}`);
   }
 
 }
